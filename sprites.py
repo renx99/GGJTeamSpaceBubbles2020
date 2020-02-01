@@ -86,8 +86,8 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         self.get_keys()
-        angle = DIRECTIONS[self.facing]
-        self.image = pg.transform.rotate(self.game.player_img, angle)
+        #angle = DIRECTIONS[self.facing]
+        #self.image = pg.transform.rotate(self.game.player_img, angle)
         if self.damaged:
             try:
                 self.image.fill((255, 255, 255, next(self.damage_alpha)), special_flags=pg.BLEND_RGBA_MULT)
