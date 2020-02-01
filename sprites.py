@@ -32,7 +32,11 @@ class Player(pg.sprite.Sprite):
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = game.player_img
+        self.stallkludge = 0
+        self.pingpong = 1
+        self.imageindex = 0
+        self.imagemap = game.player_img
+        self.image = self.imagemap.subsurface(1*32, 0*64, 32, 64)
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.hit_rect = PLAYER['hit_rect']
@@ -86,8 +90,22 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         self.get_keys()
-        #angle = DIRECTIONS[self.facing]
-        #self.image = pg.transform.rotate(self.game.player_img, angle)
+        self.stallkludge += 1
+        if self.stallkludge > 15:
+            self.stallkludge = 0
+            if self.imageindex <= 0:
+                self.pingpong = 1
+            elif self.imageindex >= 2:
+                self.pingpong = -1
+            self.imageindex += self.pingpong
+            if self.facing == 'south':
+                self.image = self.imagemap.subsurface(self.imageindex*32, 0*64, 32, 64)
+            elif self.facing == 'east':
+                self.image = self.imagemap.subsurface(self.imageindex*32, 1*64, 32, 64)
+            elif self.facing == 'north':
+                self.image = self.imagemap.subsurface(self.imageindex*32, 2*64, 32, 64)
+            elif self.facing == 'west':
+                self.image = self.imagemap.subsurface(self.imageindex*32, 3*64, 32, 64)
         if self.damaged:
             try:
                 self.image.fill((255, 255, 255, next(self.damage_alpha)), special_flags=pg.BLEND_RGBA_MULT)
