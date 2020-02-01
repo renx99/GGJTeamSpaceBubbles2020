@@ -1,5 +1,5 @@
 import pygame
-from settings import *
+import settings
 
 
 def collide_hit_rect(one, two):
@@ -7,53 +7,63 @@ def collide_hit_rect(one, two):
 
 class Map:
     def __init__(self, filename):
-        TILE_WIDTH, TILE_HEIGHT = TILE_SIZE
-        tileimgs = {
+        self.TILE_WIDTH = settings.TILESIZE
+        self.TILE_HEIGHT = settings.TILESIZE
+        self.tileimgs = {
             '0': {
                 "movable": True,
-                "tileimg": pygame.image.load("graphics/tiles/0.png").subsurface((TILE_WIDTH*0, TILE_HEIGHT*1, TILE_WIDTH, TILE_HEIGHT))
+                "tileimg": self.getmaptile("graphics/tiles/0.png", 1, 0)
             },
             'A': {
                 "movable": False,
-                "tileimg": pygame.image.load("graphics/tiles/ua.png").subsurface((TILE_WIDTH*0, TILE_HEIGHT*1, TILE_WIDTH, TILE_HEIGHT))
+                "tileimg": self.getmaptile("graphics/tiles/ua.png", 1, 0)
             }
         }
+        self.loadmap(filename)
 
-    def loadmap(fileName):
+    def getmaptile(self, filename, row, col):
+        return pygame.image.load(filename).subsurface(
+            (
+                self.TILE_WIDTH*col,
+                self.TILE_HEIGHT*row,
+                self.TILE_WIDTH,
+                self.TILE_HEIGHT
+            )
+        )
 
-        returnList = []
+    def loadmap(self, fileName):
+
+        self.maplist = []
 
         fileIn = open(fileName, "r")
         row = -1
         for lineIn in fileIn:
             row += 1
-            returnList.append([])
+            self.maplist.append([])
             line = lineIn.strip()
             tile = None
             for tileIndex in range(0, len(line), 1):
                 tile = line[tileIndex]
-                returnList[row].append(tile)
+                self.maplist[row].append(tile)
         fileIn.close()
 
-        return returnList
+    def gettilemap(self):
 
-    def gettilemap(maplist):
-
-        maxRowIndex = len(maplist)
+        maxRowIndex = len(self.maplist)
         maxColIndex = 0
 
-        for rowIndex in range(0, len(maplist), 1):
-            if len(maplist[rowIndex]) > maxColIndex:
-                maxColIndex = len(maplist[rowIndex])
+        for rowIndex in range(0, len(self.maplist), 1):
+            if len(self.maplist[rowIndex]) > maxColIndex:
+                maxColIndex = len(self.maplist[rowIndex])
 
-        returnSurface = pygame.Surface((maxColIndex*TILE_WIDTH, maxRowIndex*TILE_HEIGHT))
+        returnSurface = pygame.Surface((maxColIndex*self.TILE_WIDTH, maxRowIndex*self.TILE_HEIGHT))
 
-        for rowIndex in range(0, len(maplist), 1):
-            for colIndex in range(0, len(maplist[rowIndex]), 1):
-                tile = maplist[rowIndex][colIndex]
+        for rowIndex in range(0, len(self.maplist), 1):
+            for colIndex in range(0, len(self.maplist[rowIndex]), 1):
+                tile = self.maplist[rowIndex][colIndex]
                 returnSurface.blit(
-                    tileimgs[tile]["tileimg"],
-                    (TILE_WIDTH*colIndex, TILE_HEIGHT*rowIndex)
+                    self.tileimgs[tile]["tileimg"],
+                    (self.TILE_WIDTH*colIndex, self.TILE_HEIGHT*rowIndex)
                 )
         
         return returnSurface

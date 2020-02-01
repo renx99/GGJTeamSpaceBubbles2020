@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-from mapprocess import loadmap
-from mapprocess import gettilemap
+from mapprocess import Map
 from settings import *
 
 import os
@@ -20,7 +19,7 @@ class Game:
     def draw_text(self,text, font_name, size, color, x, y, align="topleft"):
         font = pygame.font.Font(font_name, size)
         text_surface = font.render(text, True, color)
-        text_rect = text_surface.get_rect(**{align: (x, y)})
+        text_rect = text_surface.get_rect(**{align: (int(x), int(y))})
         self.screen.blit(text_surface, text_rect)
 
     def load_data(self):
@@ -31,8 +30,8 @@ class Game:
         music_folder = os.path.join(game_folder, 'music')
         self.map_folder = os.path.join(game_folder, 'maps')
         
-        tilemaplist = loadmap("test2.map")
-        self.tilemap = gettilemap(tilemaplist)
+        map = Map("test2.map")
+        self.tilemap = map.gettilemap()
         
         # Sound loading
         """
