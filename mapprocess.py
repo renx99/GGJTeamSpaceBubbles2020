@@ -21,9 +21,9 @@ def loadmap(fileName):
 def gettileimg(tile):
     tileimg = None
     if tile == '0':
-        tileimg = pygame.image.load("graphics/tiles/0.png")
+        tileimg = pygame.image.load("graphics/tiles/0.png").subsurface((0, 32, 32, 32))
     elif tile == 'A':
-        tileimg = pygame.image.load("graphics/tiles/ua.png")
+        tileimg = pygame.image.load("graphics/tiles/ua.png").subsurface((0, 32, 32, 32))
     return tileimg
 
 def blittilemap(screen, maplist):
@@ -31,4 +31,7 @@ def blittilemap(screen, maplist):
     for rowIndex in range(0, len(maplist), 1):
         for colIndex in range(0, len(maplist[rowIndex]), 1):
             tile = maplist[rowIndex][colIndex]
-
+            screen.blit(
+                gettileimg(tile),
+                (32*colIndex, 32*rowIndex)
+            )

@@ -8,15 +8,13 @@ import pygame
 if __name__ == "__main__":
 
     pygame.init()
-    pygame.key.set_repeat(500, 1)
+    pygame.key.set_repeat(500, 100)
 
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     blittilemap(screen, loadmap("test1.map"))
-
+    
     width = screen.get_width()
     height = screen.get_height()
-
-    bgimg = pygame.image.load("graphics/sci-fi-level_-_background_layer.png")
 
     done = False
 
@@ -40,7 +38,6 @@ if __name__ == "__main__":
                 elif event.key == pygame.K_LEFT:
                     px -= 5
 
-        screen.blit(bgimg, (0, 0))
         pygame.draw.circle(
             screen,
             (255, 255, 255),
