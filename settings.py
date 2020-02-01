@@ -7,9 +7,6 @@ HEIGHT = 1080
 FPS = 60
 TITLE = 'Rust Busters <working title>'
 
-MAP_WIDTH_THRESH = 32
-MAP_HEIGHT_THRESH = 32
-
 TILESIZE = 32 
 GRIDWIDTH = WIDTH/TILESIZE
 GRIDHEIGHT = HEIGHT/TILESIZE
@@ -42,16 +39,16 @@ ENEMIES['guard'] = {
 WALL_LAYER = 1
 PLAYER_LAYER = 2
 ENEMY_LAYER = 2
+BULLET_LAYER = 3
+ITEMS_LAYER= 1
 
 # Sounds
-BG_MUSIC = ''
-COMBAT_MUSIC = ''
-PLAYER_HIT_SOUNDS = {}
-ENEMY_HIT_SOUNDS = {}
-ENEMY_HIT_SOUNDS['dog'] = {}
-ENEMY_HIT_SOUNDS['guard'] = {}
-ENEMY_ALERT_SOUNDS = {}
-ENEMY_ALERT_SOUNDS['dog'] = {}
-ENEMY_ALERT_SOUNDS['guard'] = {}
-WEAPON_SOUNDS = {}
-EFFECT_SOUNDS = {}
+BG_MUSIC = 'rebel-theme.wav'
+COMBAT_MUSIC = 'imperial_march.wav'
+PLAYER_HIT_SOUNDS = ['WilhelmScream.wav']
+ENEMY_HIT_SOUNDS = {'dog':['Chewie-chatting.wav'],
+                    'guard':['WilhelmScream.wav']}
+ENEMY_ALERT_SOUNDS = {'dog':['chewy_roar.wav'],
+                        'guard':['yodalaughing.wav']}
+WEAPON_SOUNDS = ['light-saber-on.wav']
+EFFECT_SOUNDS = ['blaster-firing.wav']
