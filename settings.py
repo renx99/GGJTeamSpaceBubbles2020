@@ -5,6 +5,7 @@ vec = pg.math.Vector2
 WIDTH = 1920
 HEIGHT = 1080
 FPS = 60
+TITLE = 'Rust Busters <working title>'
 
 TILESIZE = 64
 GRIDWIDTH = WIDTH/TILESIZE
@@ -42,5 +43,12 @@ ENEMY_LAYER = 2
 # Sounds
 BG_MUSIC = ''
 COMBAT_MUSIC = ''
+PLAYER_HIT_SOUNDS = {}
+ENEMY_HIT_SOUNDS = {}
+ENEMY_HIT_SOUNDS['dog'] = {}
+ENEMY_HIT_SOUNDS['guard'] = {}
+ENEMY_ALERT_SOUNDS = {}
+ENEMY_ALERT_SOUNDS['dog'] = {}
+ENEMY_ALERT_SOUNDS['guard'] = {}
 WEAPON_SOUNDS = {}
 EFFECT_SOUNDS = {}

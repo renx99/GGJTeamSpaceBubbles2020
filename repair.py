@@ -1,7 +1,83 @@
 from mapprocess import loadmap
 from mapprocess import gettilemap
+from settings import *
 
 import pygame
+import sys
+
+class Game:
+    def __init__(self):
+        pg.mixer.pre_init(44100, -16, 4,2048)
+        pygame.init()
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        pygame.display.set_caption(TITLE)
+        self.clock = pygame.time.Clock()
+        self.load_data()
+
+    def draw_text(self,text, font_name, size, color, x, y, align="topleft"):
+        font = pg.font.Font(font_name, size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect(**{align: (x, y)})
+        self.screen.blit(text_surface, text_rect)
+
+    def load_data(self):
+        game_folder = path.dirname(__file__)
+        graphics_folder = path.join(game_folder, 'graphics')
+        tiles_folder = path.join(graphics_folder, 'tiles')
+        sound_folder = path.join(game_folder, 'sound')
+        music_folder = path.join(game_folder, 'music')
+        self.map_folder = path.join(game_folder, 'maps')
+        
+        # Sound loading
+        pygame.mixer.music.load(path.join(music_folder, BG_MUSIC))
+        self.effects_sounds = {}
+        for type in EFFECTS_SOUNDS:
+            self.effects_sounds[type] = pygame.mixer.Sound(path.join(sound_folder, EFFECTS_SOUNDS[type))
+        self.weapon_sounds = {}
+        for type in WEAPON_SOUNDS:
+            self.weapon_sounds[type] = pygame.mixer.Sound(path.join(sound_folder, WEAPON_SOUNDS[type))
+        for type in ENEMY_HIT_SOUNDS:
+            self.enemy_hit_sounds[type] = []
+            for snd in ENEMY_HIT_SOUNDS[type]:
+                s = pygame.mixer.Sound(path.join(sound_folder, snd)
+                s.set_volume(0.2)
+                self.enemy_hit_sounds[type].append(s)
+        for type in ENEMY_ALERT_SOUNDS:
+            self.enemy_alert_sounds[type] = pygame.mixer.Sound(path.join(sound_folder, ENEMY_ALERT_SOUNDS[type))
+            self.enemy_alert_sounds[type] = []
+            for snd in ENEMY_ALERT_SOUNDS[type]:
+                s = pygame.mixer.Sound(path.join(sound_folder, snd)
+                s.set_volume(0.2)
+                self.enemy_alert_sounds[type].append(s)
+        self.player_hit_sounds = []
+        for snd in PLAYER_HIT_SOUNDS:
+            self.player_hit_sounds.append(pygame.mixer.Sound(path.join(sound_folder, snd)))
+
+    def new(self):
+        # Initialize all variables and do all the setup for a new game.
+
+    def run(self):
+        # Game loop - set self.playing = false to end the game.
+
+    def quit(self):
+        pygame.quit()
+        sys.exit()
+
+    def update(self):
+        #Update portion of the game loop.
+
+    def draw(self):
+        pygame.display.set_caption("{:.2f}".format(self.clock.get_fps()))
+
+    def events(self):
+        # Catch all events here
+        for event in pygame.event.get():
+            if event.type == pygame.quit:
+                self.quit()
+
+    def show_start_screen(self):
+        pass
+
 
 MAP_WIDTH_THRESH = 32
 MAP_HEIGHT_THRESH = 32
@@ -11,10 +87,8 @@ if __name__ == "__main__":
     tilemaplist = loadmap("test2.map")
     tilemap = gettilemap(tilemaplist)
 
-    pygame.init()
     pygame.key.set_repeat(500, 1)
 
-    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
     done = False
 
