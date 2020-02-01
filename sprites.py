@@ -28,7 +28,7 @@ def collide_with_walls(sprite, group, dir):
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
-        self._layer = LAYER['player']
+        self._layer = LAYERS['player']
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -39,15 +39,14 @@ class Player(pg.sprite.Sprite):
         self.hit_rect.center = self.rect.center
         self.vel = vec(0, 0)
         self.pos = vec(x, y)
-        self.facing = DIRECTIONS['south']
+        self.facing = 'south'
         self.last_shot = 0
         self.health = PLAYER['health']
         self.weapon = 'wrench'
         self.damaged = False
 
     def get_keys(self):  # TODO: convert to face cardinals
-        self.rot_speed = 0
-        self.vel = vec(0, 0)
+        #self.vel = vec(0, 0)
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             self.facing = 'west'
@@ -87,7 +86,7 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         self.get_keys()
-        angle = Directions[self.facing]
+        angle = DIRECTIONS[self.facing]
         self.image = pg.transform.rotate(self.game.player_img, angle)
         if self.damaged:
             try:
@@ -96,7 +95,7 @@ class Player(pg.sprite.Sprite):
                 self.damaged = False
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
-        self.pos += self.vel * self.game.dt
+        self.pos += self.vel* self.game.dt
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
         self.hit_rect.centery = self.pos.y

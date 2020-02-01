@@ -18,6 +18,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.load_data()
         self.title_font = None
+        self.pressed = None
 
     def draw_text(self,text, font_name, size, color, x, y, align="topleft"):
         font = pygame.font.Font(font_name, size)
@@ -32,10 +33,10 @@ class Game:
         sound_folder = os.path.join(game_folder, 'sound')
         music_folder = os.path.join(game_folder, 'music')
         self.map_folder = os.path.join(game_folder, 'maps')
+        self.player_img = pygame.image.load(os.path.join(graphics_folder, PLAYER['image']))
 
-
-        map = mapprocess.Map(os.path.join(self.map_folder, "test2.map"), tiles_folder)
-        self.tilemap = map.gettilemap()
+        game_map = mapprocess.Map(os.path.join(self.map_folder, "test2.map"), tiles_folder)
+        self.tilemap = game_map.gettilemap()
 
         # Sound loading
 
@@ -83,10 +84,9 @@ class Game:
         self.px = self.screen.get_width() / 2
         self.py = self.screen.get_height() / 2
 
-        self.camera = Camera(self.map.width, self.map.height)
         self.mapx = -(self.tilemap.get_width() / 2)
         self.mapy = -(self.tilemap.get_height() / 2)
-
+        self.player = Player(self, self.px, self.py)
 
     def run(self):
         # Game loop - set self.playing = false to end the game.
@@ -108,55 +108,62 @@ class Game:
         self.all_sprites.update()
         self.camera.update(self.player)
 
+        # In your game loop, check for key states:
+        if self.pressed == 'left':
+            self.px -= PLAYER['speed']
+        if self.pressed == 'right':
+            self.px += PLAYER['speed']
+        if self.pressed == 'up':
+            self.py -= PLAYER['speed']
+        if self.pressed == 'down':
+            self.py += PLAYER['speed']
+
+        self.player.pos = vec(self.px, self.py)
+
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
-        self.screen.blit(self.tilemap, (int(self.mapx), int(self.mapy)))
+        self.screen.blit(self.tilemap, self.camera.apply_rect(self.tilemap.get_rect()))
+        """
         pygame.draw.circle(
             self.screen,
             (255, 255, 255),
             (int(self.px), int(self.py)),
             16
         )
+        """
+        for sprite in self.all_sprites:
+            if isinstance(sprite, Mob):
+                sprite.draw_health()
+            self.screen.blit(sprite.image, self.camera.apply(sprite))
         pygame.display.flip()
 
     def events(self):
         # Catch all events here
-        pressed_left = False
-        pressed_right = False 
-        pressed_down = False 
-        pressed_up = False
-        
+        self.pressed_left = False
+        self.pressed_right = False
+        self.pressed_down = False
+        self.pressed_up = False
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:          # check for key presses
+                self.go = True
+                print('key-down')
+                self.player.pos = vec(self.px, self.py)
                 if event.key == pygame.K_LEFT:        # left arrow turns left
-                    pressed_left = True
+                    self.pressed = 'left'
                 elif event.key == pygame.K_RIGHT:     # right arrow turns right
-                    pressed_right = True
+                    self.pressed = 'right'
                 elif event.key == pygame.K_UP:        # up arrow goes up
-                    pressed_up = True
+                    self.pressed = 'up'
                 elif event.key == pygame.K_DOWN:     # down arrow goes down
-                    pressed_down = True
+                    self.pressed = 'down'
             elif event.type == pygame.KEYUP:            # check for key releases
-                if event.key == pygame.K_LEFT:        # left arrow turns left
-                    pressed_left = False
-                elif event.key == pygame.K_RIGHT:     # right arrow turns right
-                    pressed_right = False
-                elif event.key == pygame.K_UP:        # up arrow goes up
-                    pressed_up = False
-                elif event.key == pygame.K_DOWN:     # down arrow goes down
-                    pressed_down = False
+                self.go = False
+                print('key-up')
+                self.pressed = None
 
-        # In your game loop, check for key states:
-        if pressed_left:
-            self.px -= PLAYER['speed']
-        if pressed_right:
-            self.px += PLAYER['speed']
-        if pressed_up:
-            self.py -= PLAYER['speed']
-        if pressed_down:
-            self.py += PLAYER['speed']
 
     def show_start_screen(self):
         pass

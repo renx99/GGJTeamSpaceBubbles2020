@@ -85,13 +85,13 @@ class Camera:
         return rect.move(self.camera.topleft)
 
     def update(self, target):
-        x = -target.rect.centerx + int(WIDTH / 2)
-        y = -target.rect.centery + int(HEIGHT / 2)
+        x = -target.rect.centerx + int(settings.WIDTH / 2)
+        y = -target.rect.centery + int(settings.HEIGHT / 2)
 
         # limit scrolling to map size
         x = min(0, x)  # left
         y = min(0, y)  # top
-        x = max(-(self.width - WIDTH), x)  # right
-        y = max(-(self.height - HEIGHT), y)  # bottom
+        x = max(-(self.width - settings.WIDTH), x)  # right
+        y = max(-(self.height - settings.HEIGHT), y)  # bottom
 
         self.camera = pygame.Rect(x, y, self.width, self.height)
