@@ -32,10 +32,10 @@ class Game:
         sound_folder = os.path.join(game_folder, 'sound')
         music_folder = os.path.join(game_folder, 'music')
         self.map_folder = os.path.join(game_folder, 'maps')
+        self.player_img = pygame.image.load(os.path.join(graphics_folder, PLAYER['image']))
 
-
-        map = mapprocess.Map(os.path.join(self.map_folder, "test2.map"), tiles_folder)
-        self.tilemap = map.gettilemap()
+        game_map = mapprocess.Map(os.path.join(self.map_folder, "test2.map"), tiles_folder)
+        self.tilemap = game_map.gettilemap()
 
         # Sound loading
 
@@ -83,10 +83,9 @@ class Game:
         self.px = self.screen.get_width() / 2
         self.py = self.screen.get_height() / 2
 
-        self.camera = Camera(self.map.width, self.map.height)
         self.mapx = -(self.tilemap.get_width() / 2)
         self.mapy = -(self.tilemap.get_height() / 2)
-
+        self.player = Player(self, self.px, self.py)
 
     def run(self):
         # Game loop - set self.playing = false to end the game.
@@ -110,13 +109,19 @@ class Game:
 
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
-        self.screen.blit(self.tilemap, (int(self.mapx), int(self.mapy)))
+        self.screen.blit(self.tilemap, self.camera.apply_rect(self.tilemap.get_rect()))
+        """
         pygame.draw.circle(
             self.screen,
             (255, 255, 255),
             (int(self.px), int(self.py)),
             16
         )
+        """
+        for sprite in self.all_sprites:
+            if isinstance(sprite, Mob):
+                sprite.draw_health()
+            self.screen.blit(sprite.image, self.camera.apply(sprite))
         pygame.display.flip()
 
     def events(self):
@@ -157,6 +162,8 @@ class Game:
             self.py -= PLAYER['speed']
         if pressed_down:
             self.py += PLAYER['speed']
+
+        self.player.pos = vec(self.px, self.py)
 
     def show_start_screen(self):
         pass

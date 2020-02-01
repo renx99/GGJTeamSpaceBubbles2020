@@ -28,7 +28,7 @@ PLAYER = {
         'regen': 10,
         'speed': 5,
         'hit_rect': pg.Rect(0, 0, 128, 128),
-        'img': 'temp-player.png'
+        'image': 'temp-player.png'
     }
 
 WEAPON_OFFSET = vec(30,10)
