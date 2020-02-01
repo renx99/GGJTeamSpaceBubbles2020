@@ -5,42 +5,85 @@ vec = pg.math.Vector2
 WIDTH = 1920
 HEIGHT = 1080
 FPS = 60
+TITLE = 'Rust Busters <working title>'
 
-TILESIZE = 64
+
+TILESIZE = 32 
 GRIDWIDTH = WIDTH/TILESIZE
 GRIDHEIGHT = HEIGHT/TILESIZE
 
+BOB_RANGE = 10
+BOB_SPEED = 2
+
+DIRECTIONS = {
+        'north': 180,
+        'east': 270,
+        'south': 0,
+        'west': 90,
+    }
+
 # Player Settings
-PLAYER_HEALTH = 100
-PLAY_REGEN = 10
-PLAYER_SPEED = 5
-PLAYER_HIT_RECT = pg.Rect(0,0,35,35)
+PLAYER = {
+        'health': 100,
+        'regen': 10,
+        'speed': 5,
+        'hit_rect': pg.Rect(0, 0, 128, 128),
+        'img': 'temp-player.png'
+    }
+
 WEAPON_OFFSET = vec(30,10)
 
 # Weapon Settings
-WEAPONS = {}
-WEAPONS['wrench'] = {'damage': 50}
+WEAPONS = {
+        'wrench': {
+                'range': 2,
+                'damage': 50
+            },
+        'bite': {
+                'damage': 50,
+                'range': 1,
+            },
+        'gun': {
+                'range': 5,
+                'damage': 100,
+            }
+    }
 
 # Enemy Settings
-ENEMIES = {}
-ENEMIES['dog'] = {
-                    'damage':20,
-                    'range':1,
-                    'speed':3
-                    }
-ENEMIES['guard'] = {
-                    'damage':34,
-                    'range':5,
-                    'speed':1
-                    }
+ENEMIES = {
+        'dog': {
+            'speed': 3,
+            'weapon': 'bite',
+            'img': 'temp-dog.png',
+            'hit_rect': pg.Rect(0, 0, 64, 64),
+            'health': 100
+        },
+        'guard': {
+            'speed': 1,
+            'weapon': 'gun',
+            'img': 'temp-guard.png',
+            'hit_rect': pg.Rect(0, 0, 128, 128),
+            'health': 200
+        }
+    }
 
 # Layers
-WALL_LAYER = 1
-PLAYER_LAYER = 2
-ENEMY_LAYER = 2
+LAYERS = {
+        'wall': 1,
+        'player': 2,
+        'enemy': 2,
+        'bullet': 3,
+        'item': 4,
+        'effects': 5
+    }
 
 # Sounds
-BG_MUSIC = ''
-COMBAT_MUSIC = ''
-WEAPON_SOUNDS = {}
-EFFECT_SOUNDS = {}
+BG_MUSIC = 'rebel-theme.wav'
+COMBAT_MUSIC = 'imperial_march.wav'
+PLAYER_HIT_SOUNDS = ['WilhelmScream.wav']
+ENEMY_HIT_SOUNDS = {'dog':['Chewie-chatting.wav'],
+                    'guard':['WilhelmScream.wav']}
+ENEMY_ALERT_SOUNDS = {'dog':['chewy_roar.wav'],
+                        'guard':['yodalaughing.wav']}
+WEAPON_SOUNDS = ['light-saber-on.wav']
+EFFECT_SOUNDS = ['blaster-firing.wav']
