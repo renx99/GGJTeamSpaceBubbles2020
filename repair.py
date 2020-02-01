@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+from mapprocess import loadmap
+from mapprocess import blittilemap
+
 import pygame
 
 if __name__ == "__main__":
@@ -8,6 +11,7 @@ if __name__ == "__main__":
     pygame.key.set_repeat(500, 1)
 
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+    blittilemap(screen, loadmap("test1.map"))
 
     width = screen.get_width()
     height = screen.get_height()
