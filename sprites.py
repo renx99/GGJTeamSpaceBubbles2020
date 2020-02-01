@@ -1,14 +1,14 @@
 import pygame as pg
 from random import uniform, choice, randint, random
 from settings import *
-from tilemap import collide_hit_rect
-import pytweening as tween
+import mapprocess
+#import pytweening as tween
 from itertools import chain
 vec = pg.math.Vector2
 
 def collide_with_walls(sprite, group, dir):
     if dir == 'x':
-        hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+        hits = pg.sprite.spritecollide(sprite, group, False, mapprocess.collide_hit_rect)
         if hits:
             if hits[0].rect.centerx > sprite.hit_rect.centerx:
                 sprite.pos.x = hits[0].rect.left - sprite.hit_rect.width / 2
@@ -17,7 +17,7 @@ def collide_with_walls(sprite, group, dir):
             sprite.vel.x = 0
             sprite.hit_rect.centerx = sprite.pos.x
     if dir == 'y':
-        hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+        hits = pg.sprite.spritecollide(sprite, group, False, mapprocess.collide_hit_rect)
         if hits:
             if hits[0].rect.centery > sprite.hit_rect.centery:
                 sprite.pos.y = hits[0].rect.top - sprite.hit_rect.height / 2
@@ -241,13 +241,13 @@ class Item(pg.sprite.Sprite):
         self.type = type
         self.pos = pos
         self.rect.center = pos
-        self.tween = tween.easeInOutSine
+        #self.tween = tween.easeInOutSine
         self.step = 0
         self.dir = 1
 
     def update(self):
         # bobbing motion
-        offset = BOB_RANGE * (self.tween(self.step / BOB_RANGE) - 0.5)
+        offset = 0  # BOB_RANGE * (self.tween(self.step / BOB_RANGE) - 0.5)
         self.rect.centery = self.pos.y + offset * self.dir
         self.step += BOB_SPEED
         if self.step > BOB_RANGE:

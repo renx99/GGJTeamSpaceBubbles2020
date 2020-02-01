@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-from mapprocess import * 
+import pygame as pg
+import  mapprocess
+
 from settings import *
+from sprites import *
 
 import os
 import pygame
@@ -29,12 +32,13 @@ class Game:
         sound_folder = os.path.join(game_folder, 'sound')
         music_folder = os.path.join(game_folder, 'music')
         self.map_folder = os.path.join(game_folder, 'maps')
-        
-        map = Map(os.path.join(self.map_folder, "test2.map"), tiles_folder)
+
+
+        map = mapprocess.Map(os.path.join(self.map_folder, "test2.map"), tiles_folder)
         self.tilemap = map.gettilemap()
-        
+
         # Sound loading
-        
+
         pygame.mixer.music.load(os.path.join(music_folder, BG_MUSIC))
         self.effect_sounds = []
         for snd in EFFECT_SOUNDS:
@@ -42,8 +46,8 @@ class Game:
         self.weapon_sounds = []
         for snd in WEAPON_SOUNDS:
             self.weapon_sounds.append(pygame.mixer.Sound(os.path.join(sound_folder, snd)))
-        
-        self.enemy_hit_sounds = {} 
+
+        self.enemy_hit_sounds = {}
         for type in ENEMY_HIT_SOUNDS:
             self.enemy_hit_sounds[type] = []
             for snd in ENEMY_HIT_SOUNDS[type]:
@@ -53,7 +57,7 @@ class Game:
 
         self.enemy_alert_sounds = {}
         for type in ENEMY_ALERT_SOUNDS:
-            self.enemy_alert_sounds[type] = [] 
+            self.enemy_alert_sounds[type] = []
             for snd in ENEMY_ALERT_SOUNDS[type]:
                 s = pygame.mixer.Sound(os.path.join(sound_folder, snd))
                 s.set_volume(0.2)
@@ -61,18 +65,28 @@ class Game:
         self.player_hit_sounds = []
         for snd in PLAYER_HIT_SOUNDS:
             self.player_hit_sounds.append(pygame.mixer.Sound(os.path.join(sound_folder, snd)))
-       
+
 
     def new(self):
         # Initialize all variables and do all the setup for a new game.
         self.all_sprites = pg.sprite.LayeredUpdates()
+
+        self.walls = pg.sprite.Group()
+        self.mobs = pg.sprite.Group()
+
+        self.camera = mapprocess.Camera(self.tilemap.get_width(), self.tilemap.get_height())
+
+        self.draw_debug = False
+        self.paused = False
+        self.night = False
+
         self.px = self.screen.get_width() / 2
         self.py = self.screen.get_height() / 2
 
         self.camera = Camera(self.map.width, self.map.height)
         self.mapx = -(self.tilemap.get_width() / 2)
         self.mapy = -(self.tilemap.get_height() / 2)
-        self.paused = False
+
 
     def run(self):
         # Game loop - set self.playing = false to end the game.
@@ -113,9 +127,9 @@ class Game:
         pressed_up = False
         
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: 
-                sys.exit()        
-            elif event.type == pygame.KEYDOWN:          # check for key presses          
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:          # check for key presses
                 if event.key == pygame.K_LEFT:        # left arrow turns left
                     pressed_left = True
                 elif event.key == pygame.K_RIGHT:     # right arrow turns right
@@ -136,13 +150,13 @@ class Game:
 
         # In your game loop, check for key states:
         if pressed_left:
-            self.px -= PLAYER_SPEED 
+            self.px -= PLAYER['speed']
         if pressed_right:
-            self.px += PLAYER_SPEED
+            self.px += PLAYER['speed']
         if pressed_up:
-            self.py -= PLAYER_SPEED
+            self.py -= PLAYER['speed']
         if pressed_down:
-            self.py += PLAYER_SPEED
+            self.py += PLAYER['speed']
 
     def show_start_screen(self):
         pass
