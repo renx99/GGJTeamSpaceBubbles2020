@@ -1,3 +1,4 @@
+import os
 import pygame
 import settings
 
@@ -6,17 +7,17 @@ def collide_hit_rect(one, two):
     return one.hit_rect.colliderect(two.rect)
 
 class Map:
-    def __init__(self, filename=None):
+    def __init__(self, filename=None, maptilesfolder=None):
         self.TILE_WIDTH = settings.TILESIZE
         self.TILE_HEIGHT = settings.TILESIZE
         self.tileimgs = {
             '0': {
                 "movable": True,
-                "tileimg": self.getmaptile("graphics/tiles/0.png", 1, 0)
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "0.png"), 1, 0)
             },
             'A': {
                 "movable": False,
-                "tileimg": self.getmaptile("graphics/tiles/ua.png", 1, 0)
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "ua.png"), 1, 0)
             }
         }
         if filename:

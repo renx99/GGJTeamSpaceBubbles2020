@@ -30,7 +30,7 @@ class Game:
         music_folder = os.path.join(game_folder, 'music')
         self.map_folder = os.path.join(game_folder, 'maps')
         
-        map = Map("test2.map")
+        map = Map(os.path.join(self.map_folder, "test2.map"), tiles_folder)
         self.tilemap = map.gettilemap()
         
         # Sound loading
