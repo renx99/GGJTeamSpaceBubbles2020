@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from mapprocess import loadmap
 from mapprocess import gettilemap
 from settings import *
@@ -28,6 +29,9 @@ class Game:
         music_folder = path.join(game_folder, 'music')
         self.map_folder = path.join(game_folder, 'maps')
         
+        tilemaplist = loadmap("test2.map")
+        tilemap = gettilemap(tilemaplist)
+        
         # Sound loading
         pygame.mixer.music.load(path.join(music_folder, BG_MUSIC))
         self.effects_sounds = {}
@@ -55,7 +59,13 @@ class Game:
 
     def new(self):
         # Initialize all variables and do all the setup for a new game.
+    
+        px = screen.get_width() / 2
+        py = screen.get_height() / 2
 
+        mapx = -(tilemap.get_width() / 2)
+        mapy = -(tilemap.get_height() / 2)
+    
     def run(self):
         # Game loop - set self.playing = false to end the game.
 
@@ -67,89 +77,7 @@ class Game:
         #Update portion of the game loop.
 
     def draw(self):
-        pygame.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-
-    def events(self):
-        # Catch all events here
-        for event in pygame.event.get():
-            if event.type == pygame.quit:
-                self.quit()
-
-    def show_start_screen(self):
-        pass
-
-
-MAP_WIDTH_THRESH = 32
-MAP_HEIGHT_THRESH = 32
-
-if __name__ == "__main__":
-
-    tilemaplist = loadmap("test2.map")
-    tilemap = gettilemap(tilemaplist)
-
-    pygame.key.set_repeat(500, 1)
-
-
-    done = False
-
-    px = screen.get_width() / 2
-    py = screen.get_height() / 2
-
-    mapx = -(tilemap.get_width() / 2)
-    mapy = -(tilemap.get_height() / 2)
-
-    while not done:
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    done = True
-                elif event.key == pygame.K_UP:
-                    py -= 1
-                elif event.key == pygame.K_RIGHT:
-                    px += 1
-                elif event.key == pygame.K_DOWN:
-                    py += 1
-                elif event.key == pygame.K_LEFT:
-                    px -= 1
-
-        if px < 0:
-            px = 0
-        elif px > tilemap.get_width():
-            px = tilemap.get_width()
-
-        if py < 0:
-            py = 0
-        elif py > tilemap.get_height():
-            py = tilemap.get_height()
-
-        # Does not stop in other direction
-        if screen.get_width() > (tilemap.get_width() + mapx):
-            mapx = tilemap.get_width() - screen.get_width()
-            px = screen.get_width() - MAP_WIDTH_THRESH
-        
-        # Does not stop in other direction
-        if screen.get_height() > (tilemap.get_height() + mapy):
-            mapy = tilemap.get_height() - screen.get_height()
-            py = screen.get_height() - MAP_HEIGHT_THRESH
-
-        if px < MAP_WIDTH_THRESH:
-            mapx += (MAP_WIDTH_THRESH - px)
-            px = MAP_WIDTH_THRESH
-        elif px > (screen.get_width() - MAP_WIDTH_THRESH):
-            mapx -= ((MAP_WIDTH_THRESH + px) - screen.get_width())
-            px = (screen.get_width() - MAP_WIDTH_THRESH)
-
-        if py < MAP_HEIGHT_THRESH:
-            mapy += (MAP_HEIGHT_THRESH - py)
-            py = MAP_HEIGHT_THRESH
-        elif py > (screen.get_height() - MAP_HEIGHT_THRESH):
-            mapy -= ((MAP_HEIGHT_THRESH + py) - screen.get_height())
-            py = (screen.get_height() - MAP_HEIGHT_THRESH)
-
-
+        pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
         screen.blit(tilemap, (int(mapx), int(mapy)))
         pygame.draw.circle(
             screen,
@@ -157,7 +85,69 @@ if __name__ == "__main__":
             (int(px), int(py)),
             16
         )
-
         pygame.display.flip()
 
-    pygame.quit()
+    def events(self):
+        # Catch all events here
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: 
+                sys.exit()        
+            elif event.type == pygame.KEYDOWN:          # check for key presses          
+                if event.key == pygame.K_LEFT:        # left arrow turns left
+                    pressed_left = True
+                elif event.key == pygame.K_RIGHT:     # right arrow turns right
+                    pressed_right = True
+                elif event.key == pygame.K_UP:        # up arrow goes up
+                    pressed_up = True
+                elif event.key == pygame.K_DOWN:     # down arrow goes down
+                    pressed_down = True
+            elif event.type == pygame.KEYUP:            # check for key releases
+                if event.key == pygame.K_LEFT:        # left arrow turns left
+                    pressed_left = False
+                elif event.key == pygame.K_RIGHT:     # right arrow turns right
+                    pressed_right = False
+                elif event.key == pygame.K_UP:        # up arrow goes up
+                    pressed_up = False
+                elif event.key == pygame.K_DOWN:     # down arrow goes down
+                    pressed_down = False
+
+        # In your game loop, check for key states:
+        if pressed_left:
+            x -= PLAYER_SPEED 
+        if pressed_right:
+            x += PLAYER_SPEED
+        if pressed_up:
+            y -= PLAYER_SPEED
+        if pressed_down:
+            y += PLAYER_SPEED
+
+    def show_start_screen(self):
+        pass
+
+    def show_go_screen(self):
+        self.screen.fill(black)
+        self.draw_text('GAME OVER', self.title_font, 100 RED,
+                        WIDTH / 2, HEIGHT / 2, align='center')
+        self.draw_text('Press a key to start', self.title_font, 75, WHITE,
+                        WIDTH / 2, HEIGHT * 3 / 4, align='center')
+        pygame.display.flip()
+        self.wait_for_key()
+
+    def wait_for_key(self):
+        pygame.event.wait()
+        waiting = True
+        while waiting:
+            self.clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    waiting = False
+                    self.quit()
+                if event.type == pygame.KEYUP
+                    waiting = False
+
+g = Game()
+g.show_start_screen()
+while True:
+    g.new()
+    g.run()
+    g.show_go_screen()
