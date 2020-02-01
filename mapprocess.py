@@ -4,8 +4,14 @@ TILE_WIDTH = 32
 TILE_HEIGHT = 32
 
 tileimgs = {
-    '0': pygame.image.load("graphics/tiles/0.png").subsurface((0, TILE_HEIGHT*1, TILE_WIDTH, TILE_HEIGHT)),
-    'A': pygame.image.load("graphics/tiles/ua.png").subsurface((0, TILE_HEIGHT*1, TILE_WIDTH, TILE_HEIGHT))
+    '0': {
+        "movable": True,
+        "tileimg": pygame.image.load("graphics/tiles/0.png").subsurface((0, TILE_HEIGHT*1, TILE_WIDTH, TILE_HEIGHT))
+    },
+    'A': {
+        "movable": False,
+        "tileimg": pygame.image.load("graphics/tiles/ua.png").subsurface((0, TILE_HEIGHT*1, TILE_WIDTH, TILE_HEIGHT))
+    }
 }
 
 def loadmap(fileName):
@@ -41,7 +47,7 @@ def gettilemap(maplist):
         for colIndex in range(0, len(maplist[rowIndex]), 1):
             tile = maplist[rowIndex][colIndex]
             returnSurface.blit(
-                tileimgs[tile],
+                tileimgs[tile]["tileimg"],
                 (TILE_WIDTH*colIndex, TILE_HEIGHT*rowIndex)
             )
     

@@ -3,71 +3,76 @@ from mapprocess import loadmap
 from mapprocess import gettilemap
 from settings import *
 
+import os
 import pygame
 import sys
 
 class Game:
     def __init__(self):
-        pg.mixer.pre_init(44100, -16, 4,2048)
+        pygame.mixer.pre_init(44100, -16, 4,2048)
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.load_data()
+        self.title_font = None
 
     def draw_text(self,text, font_name, size, color, x, y, align="topleft"):
-        font = pg.font.Font(font_name, size)
+        font = pygame.font.Font(font_name, size)
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect(**{align: (x, y)})
         self.screen.blit(text_surface, text_rect)
 
     def load_data(self):
-        game_folder = path.dirname(__file__)
-        graphics_folder = path.join(game_folder, 'graphics')
-        tiles_folder = path.join(graphics_folder, 'tiles')
-        sound_folder = path.join(game_folder, 'sound')
-        music_folder = path.join(game_folder, 'music')
-        self.map_folder = path.join(game_folder, 'maps')
+        game_folder = os.path.dirname(__file__)
+        graphics_folder = os.path.join(game_folder, 'graphics')
+        tiles_folder = os.path.join(graphics_folder, 'tiles')
+        sound_folder = os.path.join(game_folder, 'sound')
+        music_folder = os.path.join(game_folder, 'music')
+        self.map_folder = os.path.join(game_folder, 'maps')
         
         tilemaplist = loadmap("test2.map")
-        tilemap = gettilemap(tilemaplist)
+        self.tilemap = gettilemap(tilemaplist)
         
         # Sound loading
-        pygame.mixer.music.load(path.join(music_folder, BG_MUSIC))
+        """
+        pygame.mixer.music.load(os.path.join(music_folder, BG_MUSIC))
         self.effects_sounds = {}
         for type in EFFECTS_SOUNDS:
-            self.effects_sounds[type] = pygame.mixer.Sound(path.join(sound_folder, EFFECTS_SOUNDS[type))
+            self.effects_sounds[type] = pygame.mixer.Sound(os.path.join(sound_folder, EFFECTS_SOUNDS[type]))
         self.weapon_sounds = {}
         for type in WEAPON_SOUNDS:
-            self.weapon_sounds[type] = pygame.mixer.Sound(path.join(sound_folder, WEAPON_SOUNDS[type))
+            self.weapon_sounds[type] = pygame.mixer.Sound(os.path.join(sound_folder, WEAPON_SOUNDS[type]))
         for type in ENEMY_HIT_SOUNDS:
             self.enemy_hit_sounds[type] = []
             for snd in ENEMY_HIT_SOUNDS[type]:
-                s = pygame.mixer.Sound(path.join(sound_folder, snd)
+                s = pygame.mixer.Sound(os.path.join(sound_folder, snd))
                 s.set_volume(0.2)
                 self.enemy_hit_sounds[type].append(s)
         for type in ENEMY_ALERT_SOUNDS:
-            self.enemy_alert_sounds[type] = pygame.mixer.Sound(path.join(sound_folder, ENEMY_ALERT_SOUNDS[type))
+            self.enemy_alert_sounds[type] = pygame.mixer.Sound(os.path.join(sound_folder, ENEMY_ALERT_SOUNDS[type]))
             self.enemy_alert_sounds[type] = []
             for snd in ENEMY_ALERT_SOUNDS[type]:
-                s = pygame.mixer.Sound(path.join(sound_folder, snd)
+                s = pygame.mixer.Sound(os.path.join(sound_folder, snd))
                 s.set_volume(0.2)
                 self.enemy_alert_sounds[type].append(s)
         self.player_hit_sounds = []
         for snd in PLAYER_HIT_SOUNDS:
-            self.player_hit_sounds.append(pygame.mixer.Sound(path.join(sound_folder, snd)))
+            self.player_hit_sounds.append(pygame.mixer.Sound(os.path.join(sound_folder, snd)))
+        """
 
     def new(self):
         # Initialize all variables and do all the setup for a new game.
     
-        px = screen.get_width() / 2
-        py = screen.get_height() / 2
+        px = self.screen.get_width() / 2
+        py = self.screen.get_height() / 2
 
-        mapx = -(tilemap.get_width() / 2)
-        mapy = -(tilemap.get_height() / 2)
+        mapx = -(self.tilemap.get_width() / 2)
+        mapy = -(self.tilemap.get_height() / 2)
     
     def run(self):
         # Game loop - set self.playing = false to end the game.
+        pass
 
     def quit(self):
         pygame.quit()
@@ -75,6 +80,7 @@ class Game:
 
     def update(self):
         #Update portion of the game loop.
+        pass
 
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
@@ -125,10 +131,10 @@ class Game:
         pass
 
     def show_go_screen(self):
-        self.screen.fill(black)
-        self.draw_text('GAME OVER', self.title_font, 100 RED,
+        self.screen.fill((0, 0, 0))
+        self.draw_text('GAME OVER', self.title_font, 100, (255, 0, 0),
                         WIDTH / 2, HEIGHT / 2, align='center')
-        self.draw_text('Press a key to start', self.title_font, 75, WHITE,
+        self.draw_text('Press a key to start', self.title_font, 75, (255, 255, 255),
                         WIDTH / 2, HEIGHT * 3 / 4, align='center')
         pygame.display.flip()
         self.wait_for_key()
@@ -142,7 +148,7 @@ class Game:
                 if event.type == pygame.QUIT:
                     waiting = False
                     self.quit()
-                if event.type == pygame.KEYUP
+                if event.type == pygame.KEYUP:
                     waiting = False
 
 g = Game()
