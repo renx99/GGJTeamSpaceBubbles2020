@@ -109,7 +109,7 @@ class Game:
 
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
-        self.screen.blit(self.tilemap, (int(self.mapx), int(self.mapy)))
+        self.screen.blit(self.tilemap, self.camera.apply_rect(self.tilemap.get_rect()))
         """
         pygame.draw.circle(
             self.screen,
