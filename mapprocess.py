@@ -6,7 +6,7 @@ def collide_hit_rect(one, two):
     return one.hit_rect.colliderect(two.rect)
 
 class Map:
-    def __init__(self, filename):
+    def __init__(self, filename=None):
         self.TILE_WIDTH = settings.TILESIZE
         self.TILE_HEIGHT = settings.TILESIZE
         self.tileimgs = {
@@ -19,7 +19,8 @@ class Map:
                 "tileimg": self.getmaptile("graphics/tiles/ua.png", 1, 0)
             }
         }
-        self.loadmap(filename)
+        if filename:
+            self.loadmap(filename)
 
     def getmaptile(self, filename, row, col):
         return pygame.image.load(filename).subsurface(
