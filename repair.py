@@ -4,8 +4,6 @@ import  mapprocess
 
 from settings import *
 from sprites import *
-import tilemap
-
 
 import os
 import pygame
@@ -24,7 +22,7 @@ class Game:
     def draw_text(self,text, font_name, size, color, x, y, align="topleft"):
         font = pygame.font.Font(font_name, size)
         text_surface = font.render(text, True, color)
-        text_rect = text_surface.get_rect(**{align: (x, y)})
+        text_rect = text_surface.get_rect(**{align: (int(x), int(y))})
         self.screen.blit(text_surface, text_rect)
 
     def load_data(self):
@@ -35,8 +33,8 @@ class Game:
         music_folder = os.path.join(game_folder, 'music')
         self.map_folder = os.path.join(game_folder, 'maps')
 
-        tilemaplist = mapprocess.loadmap("test2.map")
-        self.tilemap = mapprocess.gettilemap(tilemaplist)
+        map = mapprocess.Map(os.path.join(self.map_folder, "test2.map"), tiles_folder)
+        self.tilemap = map.gettilemap()
 
         # Sound loading
 
@@ -74,7 +72,8 @@ class Game:
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
 
-        self.camera = tilemap.Camera(self.tilemap.width, self.tilemap.height)
+        self.camera = mapprocess.Camera(self.tilemap.get_width(), self.tilemap.get_height())
+
         self.draw_debug = False
         self.paused = False
         self.night = False

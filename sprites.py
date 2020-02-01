@@ -1,14 +1,14 @@
 import pygame as pg
 from random import uniform, choice, randint, random
 from settings import *
-import tilemap
+import mapprocess
 #import pytweening as tween
 from itertools import chain
 vec = pg.math.Vector2
 
 def collide_with_walls(sprite, group, dir):
     if dir == 'x':
-        hits = pg.sprite.spritecollide(sprite, group, False, tilemap.collide_hit_rect)
+        hits = pg.sprite.spritecollide(sprite, group, False, mapprocess.collide_hit_rect)
         if hits:
             if hits[0].rect.centerx > sprite.hit_rect.centerx:
                 sprite.pos.x = hits[0].rect.left - sprite.hit_rect.width / 2
@@ -17,7 +17,7 @@ def collide_with_walls(sprite, group, dir):
             sprite.vel.x = 0
             sprite.hit_rect.centerx = sprite.pos.x
     if dir == 'y':
-        hits = pg.sprite.spritecollide(sprite, group, False, tilemap.collide_hit_rect)
+        hits = pg.sprite.spritecollide(sprite, group, False, mapprocess.collide_hit_rect)
         if hits:
             if hits[0].rect.centery > sprite.hit_rect.centery:
                 sprite.pos.y = hits[0].rect.top - sprite.hit_rect.height / 2

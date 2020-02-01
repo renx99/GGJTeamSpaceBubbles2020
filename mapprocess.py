@@ -1,54 +1,95 @@
+import os
 import pygame
+import settings
 
-TILE_WIDTH = 32
-TILE_HEIGHT = 32
 
-tileimgs = {
-    '0': {
-        "movable": True,
-        "tileimg": pygame.image.load("graphics/tiles/0.png").subsurface((0, TILE_HEIGHT*1, TILE_WIDTH, TILE_HEIGHT))
-    },
-    'A': {
-        "movable": False,
-        "tileimg": pygame.image.load("graphics/tiles/ua.png").subsurface((0, TILE_HEIGHT*1, TILE_WIDTH, TILE_HEIGHT))
-    }
-}
+def collide_hit_rect(one, two):
+    return one.hit_rect.colliderect(two.rect)
 
-def loadmap(fileName):
+class Map:
+    def __init__(self, filename=None, maptilesfolder=None):
+        self.TILE_WIDTH = settings.TILESIZE
+        self.TILE_HEIGHT = settings.TILESIZE
+        self.tileimgs = {
+            '0': {
+                "movable": True,
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "0.png"), 1, 0)
+            },
+            'A': {
+                "movable": False,
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "ua.png"), 1, 0)
+            }
+        }
+        if filename:
+            self.loadmap(filename)
 
-    returnList = []
-
-    fileIn = open(fileName, "r")
-    row = -1
-    for lineIn in fileIn:
-        row += 1
-        returnList.append([])
-        line = lineIn.strip()
-        tile = None
-        for tileIndex in range(0, len(line), 1):
-            tile = line[tileIndex]
-            returnList[row].append(tile)
-    fileIn.close()
-
-    return returnList
-
-def gettilemap(maplist):
-
-    maxRowIndex = len(maplist)
-    maxColIndex = 0
-
-    for rowIndex in range(0, len(maplist), 1):
-        if len(maplist[rowIndex]) > maxColIndex:
-            maxColIndex = len(maplist[rowIndex])
-
-    returnSurface = pygame.Surface((maxColIndex*TILE_WIDTH, maxRowIndex*TILE_HEIGHT))
-
-    for rowIndex in range(0, len(maplist), 1):
-        for colIndex in range(0, len(maplist[rowIndex]), 1):
-            tile = maplist[rowIndex][colIndex]
-            returnSurface.blit(
-                tileimgs[tile]["tileimg"],
-                (TILE_WIDTH*colIndex, TILE_HEIGHT*rowIndex)
+    def getmaptile(self, filename, row, col):
+        return pygame.image.load(filename).subsurface(
+            (
+                self.TILE_WIDTH*col,
+                self.TILE_HEIGHT*row,
+                self.TILE_WIDTH,
+                self.TILE_HEIGHT
             )
-    
-    return returnSurface
+        )
+
+    def loadmap(self, fileName):
+
+        self.maplist = []
+
+        fileIn = open(fileName, "r")
+        row = -1
+        for lineIn in fileIn:
+            row += 1
+            self.maplist.append([])
+            line = lineIn.strip()
+            tile = None
+            for tileIndex in range(0, len(line), 1):
+                tile = line[tileIndex]
+                self.maplist[row].append(tile)
+        fileIn.close()
+
+    def gettilemap(self):
+
+        maxRowIndex = len(self.maplist)
+        maxColIndex = 0
+
+        for rowIndex in range(0, len(self.maplist), 1):
+            if len(self.maplist[rowIndex]) > maxColIndex:
+                maxColIndex = len(self.maplist[rowIndex])
+
+        returnSurface = pygame.Surface((maxColIndex*self.TILE_WIDTH, maxRowIndex*self.TILE_HEIGHT))
+
+        for rowIndex in range(0, len(self.maplist), 1):
+            for colIndex in range(0, len(self.maplist[rowIndex]), 1):
+                tile = self.maplist[rowIndex][colIndex]
+                returnSurface.blit(
+                    self.tileimgs[tile]["tileimg"],
+                    (self.TILE_WIDTH*colIndex, self.TILE_HEIGHT*rowIndex)
+                )
+
+        return returnSurface
+
+
+class Camera:
+    def __init__(self, width, height):
+        self.camera = pygame.Rect(0, 0, width, height)
+        self.width = width
+        self.height = height
+
+    def apply(self, entity):
+        return entity.rect.move(self.camera.topleft)
+
+    def apply_rect(self, rect):
+        return rect.move(self.camera.topleft)
+
+    def update(self, target):
+        x = -target.rect.centerx + int(WIDTH / 2)
+        y = -target.rect.centery + int(HEIGHT / 2)
+
+        # limit scrolling to map size
+        x = min(0, x)  # left
+        y = min(0, y)  # top
+        x = max(-(self.width - WIDTH), x)  # right
+        y = max(-(self.height - HEIGHT), y)  # bottom
+        self.camera = pygame.Rect(x, y, self.width, self.height)
