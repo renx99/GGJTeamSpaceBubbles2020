@@ -64,15 +64,15 @@ class Game:
     def new(self):
         # Initialize all variables and do all the setup for a new game.
     
-        px = self.screen.get_width() / 2
-        py = self.screen.get_height() / 2
+        self.px = self.screen.get_width() / 2
+        self.py = self.screen.get_height() / 2
 
-        mapx = -(self.tilemap.get_width() / 2)
-        mapy = -(self.tilemap.get_height() / 2)
+        self.mapx = -(self.tilemap.get_width() / 2)
+        self.mapy = -(self.tilemap.get_height() / 2)
     
     def run(self):
         # Game loop - set self.playing = false to end the game.
-        pass
+        self.draw()
 
     def quit(self):
         pygame.quit()
@@ -84,11 +84,11 @@ class Game:
 
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
-        screen.blit(tilemap, (int(mapx), int(mapy)))
+        self.screen.blit(self.tilemap, (int(self.mapx), int(self.mapy)))
         pygame.draw.circle(
-            screen,
+            self.screen,
             (255, 255, 255),
-            (int(px), int(py)),
+            (int(self.px), int(self.py)),
             16
         )
         pygame.display.flip()
@@ -131,7 +131,7 @@ class Game:
         pass
 
     def show_go_screen(self):
-        self.screen.fill((0, 0, 0))
+        # self.screen.fill((0, 0, 0))
         self.draw_text('GAME OVER', self.title_font, 100, (255, 0, 0),
                         WIDTH / 2, HEIGHT / 2, align='center')
         self.draw_text('Press a key to start', self.title_font, 75, (255, 255, 255),
