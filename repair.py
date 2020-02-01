@@ -163,6 +163,8 @@ class Game:
         if pressed_down:
             self.py += PLAYER['speed']
 
+        self.player.pos = vec(self.px, self.py)
+
     def show_start_screen(self):
         pass
 

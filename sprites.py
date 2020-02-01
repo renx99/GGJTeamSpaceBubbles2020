@@ -46,7 +46,7 @@ class Player(pg.sprite.Sprite):
         self.damaged = False
 
     def get_keys(self):  # TODO: convert to face cardinals
-        # self.vel = vec(0, 0)
+        self.vel = vec(0, 0)
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             self.facing = 'west'
@@ -95,7 +95,7 @@ class Player(pg.sprite.Sprite):
                 self.damaged = False
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
-        self.pos += vec(10,10)# self.vel* self.game.dt
+        self.pos += self.vel* self.game.dt
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
         self.hit_rect.centery = self.pos.y
