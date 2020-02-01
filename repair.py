@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from mapprocess import Map
+from mapprocess import * 
 from settings import *
 
 import os
@@ -65,16 +65,25 @@ class Game:
 
     def new(self):
         # Initialize all variables and do all the setup for a new game.
-    
+        self.all_sprites = pg.sprite.LayeredUpdates()
         self.px = self.screen.get_width() / 2
         self.py = self.screen.get_height() / 2
 
+        self.camera = Camera(self.map.width, self.map.height)
         self.mapx = -(self.tilemap.get_width() / 2)
         self.mapy = -(self.tilemap.get_height() / 2)
-    
+        self.paused = False
+
     def run(self):
         # Game loop - set self.playing = false to end the game.
-        self.draw()
+        self.playing = True
+        pg.mixer.music.play(loops=-1)
+        while self.playing:
+            self.dt = self.clock.tick(FPS) / 1000.0
+            self.events()
+            if not self.paused:
+                self.update()
+            self.draw()
 
     def quit(self):
         pygame.quit()
@@ -82,7 +91,8 @@ class Game:
 
     def update(self):
         #Update portion of the game loop.
-        pass
+        self.all_sprites.update()
+        self.camera.update(self.player)
 
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
@@ -97,6 +107,11 @@ class Game:
 
     def events(self):
         # Catch all events here
+        pressed_left = False
+        pressed_right = False 
+        pressed_down = False 
+        pressed_up = False
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT: 
                 sys.exit()        
@@ -121,13 +136,13 @@ class Game:
 
         # In your game loop, check for key states:
         if pressed_left:
-            x -= PLAYER_SPEED 
+            self.px -= PLAYER_SPEED 
         if pressed_right:
-            x += PLAYER_SPEED
+            self.px += PLAYER_SPEED
         if pressed_up:
-            y -= PLAYER_SPEED
+            self.py -= PLAYER_SPEED
         if pressed_down:
-            y += PLAYER_SPEED
+            self.py += PLAYER_SPEED
 
     def show_start_screen(self):
         pass
