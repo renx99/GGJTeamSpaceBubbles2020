@@ -14,6 +14,16 @@ TILESIZE = 32
 GRIDWIDTH = WIDTH/TILESIZE
 GRIDHEIGHT = HEIGHT/TILESIZE
 
+BOB_RANGE = 10
+BOB_SPEED = 2
+
+DIRECTIONS = {
+        'north': 180,
+        'east': 270,
+        'south': 0,
+        'west': 90,
+    }
+
 # Player Settings
 PLAYER = {
         'health': 100,
@@ -27,15 +37,15 @@ WEAPON_OFFSET = vec(30,10)
 
 # Weapon Settings
 WEAPONS = {
-        'WRENCH': {
+        'wrench': {
                 'range': 2,
                 'damage': 50
             },
-        'BITE': {
+        'bite': {
                 'damage': 50,
                 'range': 1,
             },
-        'GUN': {
+        'gun': {
                 'range': 5,
                 'damage': 100,
             }
@@ -61,9 +71,12 @@ ENEMIES = {
 
 # Layers
 LAYERS = {
-        'WALL': 1,
-        'PLAYER': 2,
-        'ENEMY': 2,
+        'wall': 1,
+        'player': 2,
+        'enemy': 2,
+        'bullet': 3,
+        'item': 4,
+        'effects': 5
     }
 
 # Sounds
