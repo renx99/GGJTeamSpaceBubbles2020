@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-from mapprocess import loadmap
-from mapprocess import gettilemap
+import pygame as pg
+import  mapprocess
+
 from settings import *
+from sprites import *
 
 import os
 import pygame
@@ -20,7 +22,7 @@ class Game:
     def draw_text(self,text, font_name, size, color, x, y, align="topleft"):
         font = pygame.font.Font(font_name, size)
         text_surface = font.render(text, True, color)
-        text_rect = text_surface.get_rect(**{align: (x, y)})
+        text_rect = text_surface.get_rect(**{align: (int(x), int(y))})
         self.screen.blit(text_surface, text_rect)
 
     def load_data(self):
@@ -30,12 +32,13 @@ class Game:
         sound_folder = os.path.join(game_folder, 'sound')
         music_folder = os.path.join(game_folder, 'music')
         self.map_folder = os.path.join(game_folder, 'maps')
-        
-        tilemaplist = loadmap("test2.map")
-        self.tilemap = gettilemap(tilemaplist)
-        
+
+
+        map = mapprocess.Map(os.path.join(self.map_folder, "test2.map"), tiles_folder)
+        self.tilemap = map.gettilemap()
+
         # Sound loading
-        
+
         pygame.mixer.music.load(os.path.join(music_folder, BG_MUSIC))
         self.effect_sounds = []
         for snd in EFFECT_SOUNDS:
@@ -43,8 +46,8 @@ class Game:
         self.weapon_sounds = []
         for snd in WEAPON_SOUNDS:
             self.weapon_sounds.append(pygame.mixer.Sound(os.path.join(sound_folder, snd)))
-        
-        self.enemy_hit_sounds = {} 
+
+        self.enemy_hit_sounds = {}
         for type in ENEMY_HIT_SOUNDS:
             self.enemy_hit_sounds[type] = []
             for snd in ENEMY_HIT_SOUNDS[type]:
@@ -54,7 +57,7 @@ class Game:
 
         self.enemy_alert_sounds = {}
         for type in ENEMY_ALERT_SOUNDS:
-            self.enemy_alert_sounds[type] = [] 
+            self.enemy_alert_sounds[type] = []
             for snd in ENEMY_ALERT_SOUNDS[type]:
                 s = pygame.mixer.Sound(os.path.join(sound_folder, snd))
                 s.set_volume(0.2)
@@ -62,20 +65,39 @@ class Game:
         self.player_hit_sounds = []
         for snd in PLAYER_HIT_SOUNDS:
             self.player_hit_sounds.append(pygame.mixer.Sound(os.path.join(sound_folder, snd)))
-       
+
 
     def new(self):
         # Initialize all variables and do all the setup for a new game.
-    
+        self.all_sprites = pg.sprite.LayeredUpdates()
+
+        self.walls = pg.sprite.Group()
+        self.mobs = pg.sprite.Group()
+
+        self.camera = mapprocess.Camera(self.tilemap.get_width(), self.tilemap.get_height())
+
+        self.draw_debug = False
+        self.paused = False
+        self.night = False
+
         self.px = self.screen.get_width() / 2
         self.py = self.screen.get_height() / 2
 
+        self.camera = Camera(self.map.width, self.map.height)
         self.mapx = -(self.tilemap.get_width() / 2)
         self.mapy = -(self.tilemap.get_height() / 2)
-    
+
+
     def run(self):
         # Game loop - set self.playing = false to end the game.
-        self.draw()
+        self.playing = True
+        pg.mixer.music.play(loops=-1)
+        while self.playing:
+            self.dt = self.clock.tick(FPS) / 1000.0
+            self.events()
+            if not self.paused:
+                self.update()
+            self.draw()
 
     def quit(self):
         pygame.quit()
@@ -83,7 +105,8 @@ class Game:
 
     def update(self):
         #Update portion of the game loop.
-        pass
+        self.all_sprites.update()
+        self.camera.update(self.player)
 
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
@@ -98,10 +121,15 @@ class Game:
 
     def events(self):
         # Catch all events here
+        pressed_left = False
+        pressed_right = False 
+        pressed_down = False 
+        pressed_up = False
+        
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: 
-                sys.exit()        
-            elif event.type == pygame.KEYDOWN:          # check for key presses          
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:          # check for key presses
                 if event.key == pygame.K_LEFT:        # left arrow turns left
                     pressed_left = True
                 elif event.key == pygame.K_RIGHT:     # right arrow turns right
@@ -122,13 +150,13 @@ class Game:
 
         # In your game loop, check for key states:
         if pressed_left:
-            x -= PLAYER_SPEED 
+            self.px -= PLAYER['speed']
         if pressed_right:
-            x += PLAYER_SPEED
+            self.px += PLAYER['speed']
         if pressed_up:
-            y -= PLAYER_SPEED
+            self.py -= PLAYER['speed']
         if pressed_down:
-            y += PLAYER_SPEED
+            self.py += PLAYER['speed']
 
     def show_start_screen(self):
         pass
