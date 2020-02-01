@@ -1,5 +1,13 @@
 import pygame
 
+TILE_WIDTH = 32
+TILE_HEIGHT = 32
+
+tileimgs = {
+    '0': pygame.image.load("graphics/tiles/0.png").subsurface((0, TILE_HEIGHT*1, TILE_WIDTH, TILE_HEIGHT)),
+    'A': pygame.image.load("graphics/tiles/ua.png").subsurface((0, TILE_HEIGHT*1, TILE_WIDTH, TILE_HEIGHT))
+}
+
 def loadmap(fileName):
 
     returnList = []
@@ -18,20 +26,23 @@ def loadmap(fileName):
 
     return returnList
 
-def gettileimg(tile):
-    tileimg = None
-    if tile == '0':
-        tileimg = pygame.image.load("graphics/tiles/0.png").subsurface((0, 32, 32, 32))
-    elif tile == 'A':
-        tileimg = pygame.image.load("graphics/tiles/ua.png").subsurface((0, 32, 32, 32))
-    return tileimg
+def gettilemap(maplist):
 
-def blittilemap(screen, maplist):
+    maxRowIndex = len(maplist)
+    maxColIndex = 0
+
+    for rowIndex in range(0, len(maplist), 1):
+        if len(maplist[rowIndex]) > maxColIndex:
+            maxColIndex = len(maplist[rowIndex])
+
+    returnSurface = pygame.Surface((maxColIndex*TILE_WIDTH, maxRowIndex*TILE_HEIGHT))
 
     for rowIndex in range(0, len(maplist), 1):
         for colIndex in range(0, len(maplist[rowIndex]), 1):
             tile = maplist[rowIndex][colIndex]
-            screen.blit(
-                gettileimg(tile),
-                (32*colIndex, 32*rowIndex)
+            returnSurface.blit(
+                tileimgs[tile],
+                (TILE_WIDTH*colIndex, TILE_HEIGHT*rowIndex)
             )
+    
+    return returnSurface

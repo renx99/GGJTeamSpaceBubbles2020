@@ -1,20 +1,20 @@
-#!/usr/bin/python
-
 from mapprocess import loadmap
-from mapprocess import blittilemap
+from mapprocess import gettilemap
 
 import pygame
 
 if __name__ == "__main__":
 
+    tilemaplist = loadmap("test1.map")
+    tilemap = gettilemap(tilemaplist)
+
     pygame.init()
-    pygame.key.set_repeat(500, 100)
+    pygame.key.set_repeat(500, 1)
 
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-    blittilemap(screen, loadmap("test1.map"))
-    
     width = screen.get_width()
     height = screen.get_height()
+
 
     done = False
 
@@ -30,14 +30,15 @@ if __name__ == "__main__":
                 if event.key == pygame.K_ESCAPE:
                     done = True
                 elif event.key == pygame.K_UP:
-                    py -= 5
+                    py -= 1
                 elif event.key == pygame.K_RIGHT:
-                    px += 5
+                    px += 1
                 elif event.key == pygame.K_DOWN:
-                    py += 5
+                    py += 1
                 elif event.key == pygame.K_LEFT:
-                    px -= 5
+                    px -= 1
 
+        screen.blit(tilemap, (0, 0))
         pygame.draw.circle(
             screen,
             (255, 255, 255),
