@@ -27,7 +27,7 @@ PLAYER = {
         'health': 100,
         'regen': 10,
         'speed': 5,
-        'hit_rect': pg.Rect(0, 0, 128, 128),
+        'hit_rect': pg.Rect(32, 0, 32, 64),
         'image': 'dude.png'
     }
 
@@ -54,16 +54,18 @@ ENEMIES = {
         'dog': {
             'speed': 3,
             'weapon': 'bite',
-            'img': 'temp-dog.png',
-            'hit_rect': pg.Rect(0, 0, 64, 64),
-            'health': 100
+            'image': 'dog.png',
+            'hit_rect': pg.Rect(0, 0, 32, 32),
+            'health': 100,
+            'radius': 10
         },
         'guard': {
             'speed': 1,
             'weapon': 'gun',
-            'img': 'temp-guard.png',
-            'hit_rect': pg.Rect(0, 0, 128, 128),
-            'health': 200
+            'image': 'temp-guard.png',
+            'hit_rect': pg.Rect(0, 0, 32, 64),
+            'health': 200,
+            'radius': 10
         }
     }
 
