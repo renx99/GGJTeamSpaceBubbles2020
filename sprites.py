@@ -135,6 +135,10 @@ class Player(pg.sprite.Sprite):
             self.action()
 
     def update(self):
+        if self.game.exiting:
+            #if self.pos ....
+            pass
+
         self.get_keys()
 
         # In your game loop, check for key states:

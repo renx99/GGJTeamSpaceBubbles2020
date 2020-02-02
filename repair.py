@@ -131,6 +131,11 @@ class Game:
             e = pygame.event.Event(pygame.USEREVENT + i + j)
             pygame.time.set_timer(e.type, seconds)
 
+        e_rows = [l.index('z') if 'z' in l else 0 for l in grid]
+        e_spawns = [(x, y) for y, x in enumerate(e_rows) if x != 0]
+        print(e_spawns)
+        # TODO: Find bounding recanting Pixel/rect and then check collison on update
+
     def run(self):
         # Game loop - set self.playing = false to end the game.
         self.playing = True
