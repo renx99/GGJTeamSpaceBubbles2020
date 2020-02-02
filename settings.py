@@ -3,8 +3,8 @@ vec = pg.math.Vector2
 
 
 # Game Settings
-WIDTH = int(abs(1920 ))
-HEIGHT = int(abs(1080 ))
+WIDTH = int(abs(1280 ))
+HEIGHT = int(abs(720 ))
 FPS = 60
 TITLE = 'Rust Busters <working title>'
 
@@ -52,7 +52,7 @@ WEAPONS = {
                 'damage': 50,
                 'rate': 10
     }
-
+}
 # Enemy Settings
 ENEMIES = {
         'dog': {
