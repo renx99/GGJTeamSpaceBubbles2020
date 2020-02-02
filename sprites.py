@@ -143,9 +143,6 @@ class Player(pg.sprite.Sprite):
             self.action()
 
     def update(self):
-        if self.game.exiting:
-            #if self.pos ....
-            pass
 
         self.get_keys()
 
@@ -194,6 +191,10 @@ class Player(pg.sprite.Sprite):
         self.hit_rect.centery = self.pos.y
         collide_with_walls(self, self.game.walls, 'y')
         self.rect.center = self.hit_rect.center
+
+        if self.game.exiting:
+            if self.game.exitdoors.collidepoint(self.pos):
+                self.game.next_level()
 
     def add_health(self, amount):
         self.health += amount
