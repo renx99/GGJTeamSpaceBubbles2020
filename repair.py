@@ -14,7 +14,8 @@ class Game:
     def __init__(self):
         pygame.mixer.pre_init(44100, -16, 4,2048)
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT),
+                pygame.FULLSCREEN|pygame.DOUBLEBUF|pygame.HWSURFACE)
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.load_data()
@@ -154,9 +155,8 @@ class Game:
 
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
+        self.screen.fill((0, 0, 0))
         self.screen.blit(self.tilemap, self.camera.apply_rect(self.tilemap.get_rect()))
-        for wall in self.walls:
-            pygame.draw.rect(self.screen, (0, 255, 255), self.camera.apply_rect(wall.rect), 1)
 
         for sprite in self.all_sprites:
             if isinstance(sprite, Mob):
