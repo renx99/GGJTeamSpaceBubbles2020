@@ -43,15 +43,14 @@ WEAPONS = {
                 'rate': 10
             },
         'bite': {
-                'damage': 50,
+                'damage': 34,
                 'range': 1,
                 'rate': 10
             },
         'gun': {
                 'range': 5,
-                'damage': 100,
+                'damage': 50,
                 'rate': 10
-            }
     }
 
 # Enemy Settings
