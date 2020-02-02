@@ -3,8 +3,8 @@ vec = pg.math.Vector2
 
 
 # Game Settings
-WIDTH = 1920
-HEIGHT = 1080
+WIDTH = int(abs(1920 / 2))
+HEIGHT = int(abs(1080 / 2))
 FPS = 60
 TITLE = 'Rust Busters <working title>'
 
