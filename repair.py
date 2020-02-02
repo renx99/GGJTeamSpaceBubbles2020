@@ -37,14 +37,13 @@ class Game:
         graphics_folder = os.path.join(game_folder, 'graphics')
         self.tiles_folder = os.path.join(graphics_folder, 'tiles')
         sound_folder = os.path.join(game_folder, 'sound')
-        music_folder = os.path.join(game_folder, 'music')
+        self.music_folder = os.path.join(game_folder, 'music')
         self.map_folder = os.path.join(game_folder, 'maps')
         self.player_img = pygame.image.load(os.path.join(graphics_folder, PLAYER['image']))
         self.mob_img = pygame.image.load(os.path.join(graphics_folder, ENEMIES['dog']['image']))
+        self.mob_img = pygame.image.load(os.path.join(graphics_folder, ENEMIES['dog']['image']))
 
         # Sound loading
-
-        pygame.mixer.music.load(os.path.join(music_folder, BG_MUSIC))
         self.effect_sounds = []
         for snd in EFFECT_SOUNDS:
             self.effect_sounds.append(pygame.mixer.Sound(os.path.join(sound_folder, snd)))
@@ -76,46 +75,63 @@ class Game:
         # Initialize all variables and do all the setup for a new game.
         self.all_sprites = pg.sprite.LayeredUpdates()
 
-        game_map = mapprocess.Map(os.path.join(self.map_folder, "exploration_test1.map"), self.tiles_folder)
+        map_name = "exploration_test1.map"
+        game_map = mapprocess.Map(os.path.join(self.map_folder, map_name), self.tiles_folder)
         self.tilemap = game_map.gettilemap()
+
+        # Locate the player spawn or user the middle of the Map
+        grid = game_map.maplist
+        p_row = [l.index('S') if 'S' in l else 0 for l in grid]
+        p_x = sum(p_row)
+        if p_x > 0:
+            p_y = p_row.index(p_x)
+            p_x = TILESIZE * p_x
+            p_y = TILESIZE * p_y
+        else:
+            p_x = self.screen.get_width() / 2
+            p_y = self.screen.get_height() / 2
+        self.player = Player(self, p_x, p_y)
+
+        tilemap_w = self.tilemap.get_width()
+        tilemap_h = self.tilemap.get_height()
+        self.camera = mapprocess.Camera(tilemap_w, tilemap_h)
+        self.mapx = -(tilemap_w / 2)
+        self.mapy = -(tilemap_h / 2)
 
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
-
-        self.camera = mapprocess.Camera(self.tilemap.get_width(), self.tilemap.get_height())
-
         for wall in game_map.getwallmap():
-            Obstacle(
-                self,
-                wall[0],
-                wall[1],
-                wall[2],
-                wall[3]
-            )
+            Obstacle(self, wall[0], wall[1], wall[2], wall[3])
 
         self.draw_debug = False
         self.paused = False
         self.night = False
 
-        self.px = self.screen.get_width() / 2
-        self.py = self.screen.get_height() / 2
-
-        self.mapx = -(self.tilemap.get_width() / 2)
-        self.mapy = -(self.tilemap.get_height() / 2)
-        self.player = Player(self, self.px, self.py)
-
-        self.dog = Mob(self, 150, 300)
-        self.dog2 = Mob(self, 500, 350)
-
-        for i, mob in enumerate(self.mobs):
-            self.enumerated_mobs[i] = mob
+        # Spawn dogs with random movemnt timers on 'm' tiles
+        # TODO: Fix multple dogs in same ROW issues
+        d_rows = [l.index('m') if 'm' in l else 0 for l in grid]
+        d_spawns = [(x, y) for y, x in enumerate(d_rows) if x != 0]
+        for i, (x, y) in enumerate(d_spawns):
+            self.enumerated_mobs[i] = Mob(self, x * TILESIZE, y * TILESIZE)
             seconds = randrange(500,3000)
-            e = pygame.event.Event(pygame.USEREVENT + i, {'mob': mob})
+            e = pygame.event.Event(pygame.USEREVENT + i)
+            pygame.time.set_timer(e.type, seconds)
+
+        # Spawn Guards with random movemnt timers on 'M' tiles
+        # TODO: Fix multple dogs in same ROW issues
+        j = len(self.enumerated_mobs)
+        g_rows = [l.index('M') if 'M' in l else 0 for l in grid]
+        g_spawns = [(x, y) for y, x in enumerate(g_rows) if x != 0]
+        for i, (x, y) in enumerate(g_spawns):
+            self.enumerated_mobs[i + j] = Mob(self, x * TILESIZE, y * TILESIZE)
+            seconds = randrange(300,2000)
+            e = pygame.event.Event(pygame.USEREVENT + i + j)
             pygame.time.set_timer(e.type, seconds)
 
     def run(self):
         # Game loop - set self.playing = false to end the game.
         self.playing = True
+        pygame.mixer.music.load(os.path.join(self.music_folder, BG_MUSIC))
         pg.mixer.music.play(loops=-1)
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000.0
@@ -135,7 +151,6 @@ class Game:
 
         # In your game loop, check for key states:
 
-
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
         self.screen.blit(self.tilemap, self.camera.apply_rect(self.tilemap.get_rect()))
@@ -150,24 +165,23 @@ class Game:
 
     def events(self):
         # Catch all events here
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-            elif event.type == pygame.KEYDOWN:          # check for key presses
-                if event.key == pygame.K_LEFT:        # left arrow turns left
+            elif event.type == pygame.KEYDOWN:     # check for key presses
+                if event.key == pygame.K_LEFT:     # left arrow turns left
                     self.player.pressed = 'left'
-                elif event.key == pygame.K_RIGHT:     # right arrow turns right
+                elif event.key == pygame.K_RIGHT:  # right arrow turns right
                     self.player.pressed = 'right'
-                elif event.key == pygame.K_UP:        # up arrow goes up
+                elif event.key == pygame.K_UP:     # up arrow goes up
                     self.player.pressed = 'up'
-                elif event.key == pygame.K_DOWN:     # down arrow goes down
+                elif event.key == pygame.K_DOWN:   # down arrow goes down
                     self.player.pressed = 'down'
-                elif event.key == pygame.K_p:     # down arrow goes down
+                elif event.key == pygame.K_p:      # down arrow goes down
                     self.paused
-                elif event.key == pygame.K_ESCAPE:     # down arrow goes down
+                elif event.key == pygame.K_ESCAPE:  # down arrow goes down
                     self.quit()
-            elif event.type == pygame.KEYUP:            # check for key releases
+            elif event.type == pygame.KEYUP:        # check for key releases
                 self.pressed = None
             elif event.type >= pygame.USEREVENT:
                 pygame.time.set_timer(event.type, 0)
@@ -177,12 +191,17 @@ class Game:
                 pygame.time.set_timer(event.type, seconds)
 
 
-
     def show_start_screen(self):
-        pass
+        pygame.mixer.music.load(os.path.join(self.music_folder, MENU_MUSIC))
+        pg.mixer.music.play(loops=-1)
+        self.draw_text(TITLE, self.title_font, 100, (255, 0, 0),
+                        WIDTH / 2, HEIGHT / 2, align='center')
+        self.draw_text('Press a key to start', self.title_font, 75, (255, 255, 255),
+                        WIDTH / 2, HEIGHT * 3 / 4, align='center')
+        pygame.display.flip()
+        self.wait_for_key()
 
     def show_go_screen(self):
-        # self.screen.fill((0, 0, 0))
         self.draw_text('GAME OVER', self.title_font, 100, (255, 0, 0),
                         WIDTH / 2, HEIGHT / 2, align='center')
         self.draw_text('Press a key to start', self.title_font, 75, (255, 255, 255),
