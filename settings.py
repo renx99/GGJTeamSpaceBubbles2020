@@ -53,7 +53,7 @@ WEAPONS = {
                 'rate': 1
             }
     }
-}
+
 # Enemy Settings
 ENEMIES = {
         'dog': {
