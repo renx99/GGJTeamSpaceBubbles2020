@@ -174,7 +174,7 @@ class Game:
 
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
-        self.screen.fill((0, 0, 0))
+        self.screen.fill((125, 86, 8))
         self.screen.blit(self.tilemap, self.camera.apply_rect(self.tilemap.get_rect()))
 
         for sprite in self.all_sprites:
