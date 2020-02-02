@@ -43,13 +43,13 @@ WEAPONS = {
                 'rate': 2
             },
         'bite': {
-                'damage': 50,
+                'damage': 34,
                 'range': 1,
                 'rate': 1
             },
         'gun': {
                 'range': 5,
-                'damage': 100,
+                'damage': 60,
                 'rate': 1
             }
     }

@@ -19,11 +19,14 @@ class Game:
         self.clock = pygame.time.Clock()
         self.load_data()
         self.title_font = None
+        self.hud_font = 'arial'
         self.enumerated_mobs = {}
+        self.golem_parts = 0
+        self.golem_goal = 99
 
 
     def draw_text(self,text, font_name, size, color, x, y, align="topleft"):
-        font = pygame.font.Font(font_name, size)
+        font = pygame.font.SysFont(font_name, size)
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect(**{align: (int(x), int(y))})
         self.screen.blit(text_surface, text_rect)
@@ -73,7 +76,7 @@ class Game:
         # Initialize all variables and do all the setup for a new game.
         self.all_sprites = pg.sprite.LayeredUpdates()
 
-        map_name = "exploration_test1.map"
+        map_name = "1.map"
         game_map = mapprocess.Map(os.path.join(self.map_folder, map_name), self.tiles_folder)
         self.tilemap = game_map.gettilemap()
 
@@ -159,6 +162,20 @@ class Game:
             if isinstance(sprite, Mob):
                 sprite.draw_health()
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+
+        if PLAYER['health'] >= 90:  # if above 90 health text is green
+            self.draw_text('Health: {}'.format(PLAYER['health']), self.hud_font, 20, (0, 255, 0),
+                        75, 15, align='center')
+        elif PLAYER['health'] <= 66 and PLAYER['health'] >= 51:  # if above 51 and bellow 66 health text is yellow
+            self.draw_text('Health: {}'.format(PLAYER['health']), self.hud_font, 20, (255, 255, 0),
+                           75, 15, align='center')
+        elif PLAYER['health'] <= 50:  # if bellow 50 health text is red
+            self.draw_text('Health: {}'.format(PLAYER['health']), self.hud_font, 20, (255, 0, 0),
+                           75, 15, align='center')
+        #golem_parts
+        self.draw_text('Golem parts: {}/{}'.format(self.golem_parts, self.golem_goal), self.hud_font, 20, (255, 0, 0),
+                           220, 15, align='center')
+
         pygame.display.flip()
 
     def events(self):
