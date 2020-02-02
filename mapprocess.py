@@ -43,12 +43,12 @@ class Map:
             'Q': {'walkable': False, 'tileimg': map_t('carpile.png', 0, 1)},  # Car pile Used
             'q': {'walkable': False, 'tileimg': map_t('carpile.png', 1, 1)},  # Car pile Used
             'S': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)},  # Spawn Used
-            'T': {'walkable': False, 'tileimg': map_t('door.png', 0, 0)},  # Golem
-            't': {'walkable': False, 'tileimg': map_t('door.png', 0, 0)},  # Golem
-            'U': {'walkable': False, 'tileimg': map_t('door.png', 0, 0)},  # Golem
-            'u': {'walkable': False, 'tileimg': map_t('door.png', 0, 0)},  # Golem
-            'X': {'walkable': False, 'tileimg': map_t('Golem_3d_paint.png', 0, 0)},  # Golem Used
-            'x': {'walkable': False, 'tileimg': map_t('Golem_3d_paint.png', 0, 0)},  # Golem Used
+            'T': {'walkable': False, 'tileimg': map_t('robotprogress5.png', 1, 0)},  # Golem
+            't': {'walkable': False, 'tileimg': map_t('robotprogress5.png', 1, 1)},  # Golem
+            'U': {'walkable': False, 'tileimg': map_t('robotprogress5.png', 2, 0)},  # Golem
+            'u': {'walkable': False, 'tileimg': map_t('robotprogress5.png', 2, 1)},  # Golem
+            'X': {'walkable': False, 'tileimg': map_t('robotprogress5.png', 0, 0)},  # Golem Used
+            'x': {'walkable': False, 'tileimg': map_t('robotprogress5.png', 0, 1)},  # Golem Used
             'y': {'walkable': False, 'tileimg': map_t('Golem_3d_paint.png', 0, 0)},  # Golem part Used
             'Z': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)},  # Entrance
             'z': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)}  # Exit

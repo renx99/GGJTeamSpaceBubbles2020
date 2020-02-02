@@ -6,7 +6,7 @@ vec = pg.math.Vector2
 WIDTH = int(abs(1280 ))
 HEIGHT = int(abs(720 ))
 FPS = 60
-TITLE = 'Rust Busters <working title>'
+TITLE = 'I Am Lonely at the End of the World, What is This New Friend That I Have to Repair!? '
 
 TILESIZE = 32
 GRIDWIDTH = WIDTH/TILESIZE
