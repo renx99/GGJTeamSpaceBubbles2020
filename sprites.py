@@ -87,6 +87,14 @@ class Player(pg.sprite.Sprite):
             return close.pop()
 
     def find_closest_junk(self):
+        close = [j for j in self.game.junk if self.in_range(self.pos, j.pos)]
+        if len(close) == 0:
+            return None
+        elif len(close) == 1:
+            return close.pop()
+        else:
+            # TODO: Need to find the closest
+            return close.pop()
         pass
 
     def find_closest_obj(self):
@@ -94,8 +102,10 @@ class Player(pg.sprite.Sprite):
 
     def whack(self, junk):
         now = pg.time.get_ticks()
-        if now - self.last_shot > WEAPONS[self.weapon]['rate']:
+        if now - self.last_shot > WEAPONS[self.weapon]['rate'] * 1000:
             self.last_shot = now
+            dir = self.facing
+            junk.collect(WEAPONS[self.weapon]['damage'])
             print('thonk')
 
     def attack(self, mob):
@@ -106,9 +116,7 @@ class Player(pg.sprite.Sprite):
             self.last_shot = now
             dir = self.facing
             pos = self.pos + BODY_OFFSET.rotate(DIRECTIONS[self.facing])
-
             mob.hit(WEAPONS[self.weapon]['damage'])
-
             print('yelp')
             """
             snd = choice(self.game.weapon_sounds[self.weapon])
@@ -319,7 +327,7 @@ class Mob(pg.sprite.Sprite):
         elif self.health > 30:
             col = (255, 255, 0)  # YELLOW
         else:
-            col = (0, 0, 255)  # RED
+            col = (255, 0, 0)  # RED
         width = int(self.rect.width * self.health / ENEMIES[enemy]['health'])
         self.health_bar = pg.Rect(0, 0, width, 7)
         if self.health < ENEMIES[enemy]['health']:
@@ -350,6 +358,44 @@ class Bullet(pg.sprite.Sprite):
             self.kill()
         if pg.time.get_ticks() - self.spawn_time > WEAPONS[self.game.player.weapon]['bullet_lifetime']:
             self.kill()
+
+class Junk(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self._layer = LAYERS['item']
+        self.groups = game.all_sprites, game.junk
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.stuck = 500
+        self.rect = pg.Rect(x, y, TILESIZE, TILESIZE)
+        self.image = game.junk_img.copy()
+        self.hit_rect = self.rect
+        self.pos = vec(x, y)
+        self.rect.x = x
+        self.rect.y = y
+
+    def draw_stuck(self):
+        if self.stuck > 340:
+            col = (255, 0, 0)  # RED
+        elif self.stuck > 150:
+            col = (255, 255, 0)  # YELLOW
+        else:
+            col = (0, 255, 0)  # GREEN
+        width = int(self.rect.width * self.stuck / 500)
+        self.stuck_bar = pg.Rect(0, 0, width, 7)
+        if self.stuck < 500:
+            pg.draw.rect(self.image, col, self.stuck_bar)
+        self.update()
+
+    def collect(self, work):
+        self.loosened = True
+        self.stuck -= work
+        if self.stuck <= 0:
+            self.game.golem_parts += 1
+            if self.game.golem_parts > self.game.golem_goal:
+                self.game.victory = True
+            self.kill()
+
+
 
 class Obstacle(pg.sprite.Sprite):
     def __init__(self, game, x, y, w, h):
