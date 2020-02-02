@@ -1,0 +1,3 @@
+backup
+            'B': {'walkable': False, 'tileimg': map_t('tire-stack.png', 0, 0)},
+            'b': {'walkable': False, 'tileimg': map_t('tire-stack.png', 1, 0)},

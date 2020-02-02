@@ -22,6 +22,8 @@ class Map:
             '5': {'walkable': True, 'tileimg': map_t('junkpile5.png', 0, 0)},  # Used
             '6': {'walkable': True, 'tileimg': map_t('junkpile6.png', 0, 0)},  # Used
             'A': {'walkable': True, 'tileimg': map_t('ua.png', 1, 0)},  # TODO
+            'B': {'walkable': False, 'tileimg': map_t('tire-stack.png', 0, 0)},
+            'b': {'walkable': False, 'tileimg': map_t('tire-stack.png', 1, 0)},
             'C': {'walkable': False, 'tileimg': map_t('chainlink.png', 0, 0)},  # chainlink Used
             'c': {'walkable': False, 'tileimg': map_t('carpile.png', 1, 0)},  # TODO
             'D': {'walkable': True, 'tileimg': map_t('dirtandgrasses.png', 0, 0)},  # Dirt Used
@@ -32,7 +34,7 @@ class Map:
             'f': {'walkable': True, 'tileimg': map_t('grass1edges.png', 0, 1)},
             'G': {'walkable': True, 'tileimg': map_t('grasses.png', 1, 0)},  # Used
             'g': {'walkable': True, 'tileimg': map_t('dirtandgrasses.png', 0, 1)},  # Used
-            'J': {'walkable': False, 'tileimg': map_t('midjunkpile3.png', 1, 0)},
+            'J': {'walkable': False, 'tileimg': map_t('tire-stack.png', 2, 0)},
             'j': {'walkable': True, 'tileimg': map_t('dirt1tile.png', 0, 0)},  # Used
             'M': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)},  # Mob, large (guard)
             'm': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)},  # Mob, small (dog)
@@ -41,6 +43,11 @@ class Map:
             'Q': {'walkable': False, 'tileimg': map_t('carpile.png', 0, 1)},  # Car pile Used
             'q': {'walkable': False, 'tileimg': map_t('carpile.png', 1, 1)},  # Car pile Used
             'S': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)},  # Spawn Used
+            'T': {'walkable': False, 'tileimg': map_t('door.png', 0, 0)},  # Golem
+            't': {'walkable': False, 'tileimg': map_t('door.png', 0, 0)},  # Golem
+            'U': {'walkable': False, 'tileimg': map_t('door.png', 0, 0)},  # Golem
+            'u': {'walkable': False, 'tileimg': map_t('door.png', 0, 0)},  # Golem
+            'X': {'walkable': False, 'tileimg': map_t('Golem_3d_paint.png', 0, 0)},  # Golem Used
             'x': {'walkable': False, 'tileimg': map_t('Golem_3d_paint.png', 0, 0)},  # Golem Used
             'y': {'walkable': False, 'tileimg': map_t('Golem_3d_paint.png', 0, 0)},  # Golem part Used
             'Z': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)},  # Entrance
