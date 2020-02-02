@@ -365,7 +365,7 @@ class Junk(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.junk
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.stuck = 500
+        self.stuck = 240
         self.rect = pg.Rect(x, y, TILESIZE, TILESIZE)
         self.image = game.junk_img.copy()
         self.hit_rect = self.rect
@@ -374,15 +374,15 @@ class Junk(pg.sprite.Sprite):
         self.rect.y = y
 
     def draw_stuck(self):
-        if self.stuck > 340:
+        if self.stuck > 160:
             col = (255, 0, 0)  # RED
-        elif self.stuck > 150:
+        elif self.stuck > 77:
             col = (255, 255, 0)  # YELLOW
         else:
             col = (0, 255, 0)  # GREEN
-        width = int(self.rect.width * self.stuck / 500)
+        width = int(self.rect.width * self.stuck / 240)
         self.stuck_bar = pg.Rect(0, 0, width, 7)
-        if self.stuck < 500:
+        if self.stuck < 240:
             pg.draw.rect(self.image, col, self.stuck_bar)
         self.update()
 
