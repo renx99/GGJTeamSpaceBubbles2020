@@ -12,11 +12,11 @@ class Map:
         self.TILE_HEIGHT = settings.TILESIZE
         self.tileimgs = {
             '0': {
-                "movable": True,
+                "walkable": True,
                 "tileimg": self.getmaptile(os.path.join(maptilesfolder, "0.png"), 1, 0)
             },
             'A': {
-                "movable": False,
+                "walkable": False,
                 "tileimg": self.getmaptile(os.path.join(maptilesfolder, "ua.png"), 1, 0)
             }
         }
@@ -58,17 +58,36 @@ class Map:
             if len(self.maplist[rowIndex]) > maxColIndex:
                 maxColIndex = len(self.maplist[rowIndex])
 
-        returnSurface = pygame.Surface((maxColIndex*self.TILE_WIDTH, maxRowIndex*self.TILE_HEIGHT))
+        returnSurface = pygame.Surface(
+            (
+                maxColIndex*self.TILE_WIDTH,
+                maxRowIndex*self.TILE_HEIGHT
+            )
+        )
 
         for rowIndex in range(0, len(self.maplist), 1):
             for colIndex in range(0, len(self.maplist[rowIndex]), 1):
-                tile = self.maplist[rowIndex][colIndex]
                 returnSurface.blit(
-                    self.tileimgs[tile]["tileimg"],
+                    self.tileimgs[self.maplist[rowIndex][colIndex]]["tileimg"],
                     (self.TILE_WIDTH*colIndex, self.TILE_HEIGHT*rowIndex)
                 )
 
         return returnSurface
+
+    def getwallmap(self):
+        returnList = []
+        for rowIndex in range(0, len(self.maplist), 1):
+            for colIndex in range(0, len(self.maplist[rowIndex]), 1):
+                if not self.tileimgs[self.maplist[rowIndex][colIndex]]["walkable"]:
+                    returnList.append(
+                       (
+                           self.TILE_WIDTH*colIndex,
+                           self.TILE_HEIGHT*rowIndex,
+                           self.TILE_WIDTH,
+                           self.TILE_HEIGHT
+                        )
+                    )
+        return returnList
 
 
 class Camera:
