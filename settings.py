@@ -86,7 +86,7 @@ LAYERS = {
 
 # Sounds
 MENU_MUSIC = 'menu_loop.ogg'
-BG_MUSIC = 'combat_loop.ogg'
+BG_MUSIC = 'combat_area_loop.ogg'
 COMBAT_MUSIC = 'ambient_loop.ogg'
 COMBAT_AREA_MUSIC = 'combat_area_loop.ogg'
 PLAYER_HIT_SOUNDS = ['WilhelmScream.wav']
