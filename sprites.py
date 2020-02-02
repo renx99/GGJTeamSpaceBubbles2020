@@ -166,6 +166,12 @@ class Mob(pg.sprite.Sprite):
 
     def update(self):
         #print('dog update')
+
+        self.pos.x += ENEMIES['dog']['speed']
+        self.pos.y += ENEMIES['dog']['speed']
+
+        self.pos = vec(self.pos.x, self.pos.y)
+
         target_dist = self.target.pos - self.pos
         mob_type = 'dog'
 
