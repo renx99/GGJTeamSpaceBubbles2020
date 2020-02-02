@@ -91,7 +91,7 @@ class Map:
             },
             'j': {
                 "walkable": True,
-                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "j.png"), 1, 0)
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "dirt1tile.png"), 0, 0)
             },
             'P': {  # Carpile
                 "walkable": False,
