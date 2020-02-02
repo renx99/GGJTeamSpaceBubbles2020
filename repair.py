@@ -150,7 +150,7 @@ class Game:
         if self.current_level < len(self.level_progression):
             self.golem_parts = 0
             self.golem_goal = self.current_level + 1
-            self.show_next_level()
+            self.show_next_screen()
             self.exiting = False
             self.new()
         elif self.current_level >= len(self.level_progression):
