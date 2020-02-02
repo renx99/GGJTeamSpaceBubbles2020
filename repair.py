@@ -15,7 +15,7 @@ class Game:
         pygame.mixer.pre_init(44100, -16, 4,2048)
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT),
-                pygame.FULLSCREEN|pygame.DOUBLEBUF|pygame.HWSURFACE)
+                pygame.DOUBLEBUF|pygame.HWSURFACE)
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.load_data()
@@ -42,6 +42,7 @@ class Game:
         self.music_folder = os.path.join(game_folder, 'music')
         self.map_folder = os.path.join(game_folder, 'maps')
         self.player_img = pygame.image.load(os.path.join(graphics_folder, PLAYER['image']))
+        self.junk_img = pygame.image.load(os.path.join(graphics_folder, 'tiles/junkpile1.png'))
         self.mob_img = {}
         for mob_type in ENEMIES.keys():
             img_path = os.path.join(graphics_folder, ENEMIES[mob_type]['image'])
@@ -104,6 +105,7 @@ class Game:
 
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
+        self.junk = pg.sprite.Group()
         for wall in game_map.getwallmap():
             Obstacle(self, wall[0], wall[1], wall[2], wall[3])
 
@@ -131,10 +133,19 @@ class Game:
             e = pygame.event.Event(pygame.USEREVENT + i + j)
             pygame.time.set_timer(e.type, seconds)
 
+        # track exit squares with random movemnt timers on 'M' tiles
         e_rows = [l.index('z') if 'z' in l else 0 for l in grid]
         e_spawns = [(x, y) for y, x in enumerate(e_rows) if x != 0]
         print(e_spawns)
         # TODO: Find bounding recanting Pixel/rect and then check collison on update
+
+        y_rows = [l.index('y') if 'y' in l else 0 for l in grid]
+        y_spawns = [(x, y) for y, x in enumerate(y_rows) if x != 0]
+        print('----')
+        print(y_spawns)
+        for x, y in y_spawns:
+            junk = Junk(self, x * TILESIZE, y * TILESIZE)
+
 
     def run(self):
         # Game loop - set self.playing = false to end the game.
@@ -180,6 +191,8 @@ class Game:
         for sprite in self.all_sprites:
             if isinstance(sprite, Mob):
                 sprite.draw_health()
+            if isinstance(sprite, Junk):
+                sprite.draw_stuck()
             self.screen.blit(sprite.image, self.camera.apply(sprite))
 
         if PLAYER['health'] >= 90:  # if above 90 health text is green
