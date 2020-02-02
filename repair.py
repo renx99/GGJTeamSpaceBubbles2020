@@ -23,7 +23,7 @@ class Game:
         self.hud_font = 'arial'
         self.enumerated_mobs = {}
         self.golem_parts = 0
-        self.golem_goal = 99
+        self.golem_goal = 1
         self.level_progression = ['1.map', '2.map', '3.map', '4.map', '5.map']
         self.current_level = 0;
         self.exiting = False
@@ -144,7 +144,7 @@ class Game:
             self.draw()
             if self.exiting:
                 self.next_level()
-    
+
     def next_level(self):
         self.current_level += 1
         if self.current_level < len(self.level_progression):
