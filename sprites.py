@@ -58,10 +58,14 @@ class Player(pg.sprite.Sprite):
         # Attempt to located object within 'Range'
         # Priority goes 'Mob' -> 'Part/Mining' -> 'Door/Drop'?
         mob = self.find_closest_mob()
-        if mob:
-             self.whack(mob)
-
         junk = self.find_closest_junk()
+        obj = self.find_closest_obj()
+        if mob:
+             self.attack(mob)
+        elif junk:
+            self.whack(junk)
+        elif obj:
+            pass
 
 
     def in_range(self, pos, target):
@@ -85,17 +89,20 @@ class Player(pg.sprite.Sprite):
     def find_closest_junk(self):
         pass
 
-    def attack(self):
+    def find_closest_obj(self):
+        pass
+
+    def whack(self, junk):
         now = pg.time.get_ticks()
         if now - self.last_shot > WEAPONS[self.weapon]['rate']:
             self.last_shot = now
-        print('rawr')
+            print('thonk')
 
-    def whack(self, mob):
-        print('thonk')
+    def attack(self, mob):
         now = pg.time.get_ticks()
         print(now - self.last_shot)
         if now - self.last_shot > WEAPONS[self.weapon]['rate'] * 1000:
+            print('rawr')
             self.last_shot = now
             dir = self.facing
             pos = self.pos + BODY_OFFSET.rotate(DIRECTIONS[self.facing])
@@ -183,8 +190,8 @@ class Player(pg.sprite.Sprite):
 
 
 class Mob(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
-        mob_type = 'dog'  # TODO: add gaurds
+    def __init__(self, game, x, y, m_type):
+        self.mob_type = m_type
         self._layer = LAYERS['enemy']
         self.groups = game.all_sprites, game.mobs
         pg.sprite.Sprite.__init__(self, self.groups)
@@ -192,18 +199,18 @@ class Mob(pg.sprite.Sprite):
         self.imageindex = 0
         self.facing = 'south'
         self.game = game
-        self.imagemap = game.mob_img.copy()
-        self.image = self.imagemap.subsurface(ENEMIES[mob_type]['hit_rect'])
+        self.imagemap = game.mob_img[m_type].copy()
+        self.image = self.imagemap.subsurface(ENEMIES[m_type]['hit_rect'])
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-        self.hit_rect = ENEMIES[mob_type]['hit_rect'].copy()
+        self.hit_rect = ENEMIES[m_type]['hit_rect'].copy()
         self.hit_rect.center = self.rect.center
         self.pos = vec(x, y)
         self.vel = vec(0, 0)
         self.rect.center = self.pos
-        self.health = ENEMIES[mob_type]['health']
-        self.radius = ENEMIES[mob_type]['radius']
-        self.speed = choice([ENEMIES[mob_type]['speed']])
+        self.health = ENEMIES[m_type]['health']
+        self.radius = ENEMIES[m_type]['radius']
+        self.speed = choice([ENEMIES[m_type]['speed']])
         self.target = game.player
 
     def avoid_mobs(self):
