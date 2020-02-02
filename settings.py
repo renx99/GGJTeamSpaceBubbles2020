@@ -8,7 +8,7 @@ FPS = 60
 TITLE = 'Rust Busters <working title>'
 
 
-TILESIZE = 32 
+TILESIZE = 32
 GRIDWIDTH = WIDTH/TILESIZE
 GRIDHEIGHT = HEIGHT/TILESIZE
 
@@ -78,7 +78,7 @@ LAYERS = {
     }
 
 # Sounds
-BG_MUSIC = 'rebel-theme.wav'
+BG_MUSIC = 'combat_loop_fixed.ogg'
 COMBAT_MUSIC = 'imperial_march.wav'
 PLAYER_HIT_SOUNDS = ['WilhelmScream.wav']
 ENEMY_HIT_SOUNDS = {'dog':['Chewie-chatting.wav'],
