@@ -40,17 +40,17 @@ WEAPONS = {
         'wrench': {
                 'range': 2,
                 'damage': 50,
-                'rate': 10
+                'rate': 2
             },
         'bite': {
                 'damage': 50,
                 'range': 1,
-                'rate': 10
+                'rate': 1
             },
         'gun': {
                 'range': 5,
                 'damage': 100,
-                'rate': 10
+                'rate': 1
             }
     }
 
