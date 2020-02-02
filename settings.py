@@ -27,7 +27,7 @@ PLAYER = {
         'health': 100,
         'regen': 10,
         'speed': 5,
-        'hit_rect': pg.Rect(0, 0, 128, 128),
+        'hit_rect': pg.Rect(0, 0, 32, 64),
         'image': 'dude.png'
     }
 
