@@ -181,8 +181,16 @@ class Mob(pg.sprite.Sprite):
     def update(self):
         #print('dog update')
 
-        self.pos.x += ENEMIES['dog']['speed']
-        self.pos.y += ENEMIES['dog']['speed']
+        if self.facing == 'north':
+            self.pos.y -= ENEMIES['dog']['speed']
+        elif self.facing == 'south':
+            self.pos.y += ENEMIES['dog']['speed']
+        elif self.facing == 'east':
+            self.pos.x += ENEMIES['dog']['speed']
+        elif self.facing == 'west':
+            self.pos.x -= ENEMIES['dog']['speed']
+        #self.pos.x += ENEMIES['dog']['speed']
+        #self.pos.y += ENEMIES['dog']['speed']
 
         self.pos = vec(self.pos.x, self.pos.y)
 
@@ -200,9 +208,9 @@ class Mob(pg.sprite.Sprite):
 
             if self.facing == 'south':
                 self.image = self.imagemap.subsurface(self.imageindex*32, 3*32, 32, 32)
-            elif self.facing == 'east':
-                self.image = self.imagemap.subsurface(self.imageindex*32, 1*32, 32, 32)
             elif self.facing == 'north':
+                self.image = self.imagemap.subsurface(self.imageindex*32, 1*32, 32, 32)
+            elif self.facing == 'east':
                 self.image = self.imagemap.subsurface(self.imageindex*32, 2*32, 32, 32)
             elif self.facing == 'west':
                 self.image = self.imagemap.subsurface(self.imageindex*32, 0*32, 32, 32)

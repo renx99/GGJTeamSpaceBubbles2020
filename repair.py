@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import pygame as pg
-import  mapprocess
+import mapprocess
+from  random import randint, choice, randrange
 
 from settings import *
 from sprites import *
@@ -8,6 +9,9 @@ from sprites import *
 import os
 import pygame
 import sys
+
+def bork(mob):
+    print(mob)
 
 class Game:
     def __init__(self):
@@ -18,7 +22,9 @@ class Game:
         self.clock = pygame.time.Clock()
         self.load_data()
         self.title_font = None
-        self.pressed = None
+        self.enumerated_mobs = {}
+
+
 
     def draw_text(self,text, font_name, size, color, x, y, align="topleft"):
         font = pygame.font.Font(font_name, size)
@@ -99,7 +105,19 @@ class Game:
         self.player = Player(self, self.px, self.py)
 
         self.dog = Mob(self, 150, 300)
-        self.dog2 = Mob(self, 300, 350)
+        self.dog2 = Mob(self, 500, 350)
+
+        for i, mob in enumerate(self.mobs):
+            print(mob)
+            print(type(mob))
+            self.enumerated_mobs[i] = mob
+            seconds = randrange(500,3000)
+            e = pygame.event.Event(pygame.USEREVENT + i, {'mob': mob})
+            print(e)
+            print(e.mob)
+            pygame.time.set_timer(e.type, seconds)
+            #pygame.event.post(e)
+        print('----')
 
     def run(self):
         # Game loop - set self.playing = false to end the game.
@@ -156,6 +174,13 @@ class Game:
                     self.quit()
             elif event.type == pygame.KEYUP:            # check for key releases
                 self.pressed = None
+            elif event.type >= pygame.USEREVENT:
+                pygame.time.set_timer(event.type, 0)
+                mob = self.enumerated_mobs[event.type - pygame.USEREVENT]
+                mob.facing = choice(list(DIRECTIONS.keys()))
+                seconds = randrange(500,3000)
+                pygame.time.set_timer(event.type, seconds)
+
 
 
     def show_start_screen(self):

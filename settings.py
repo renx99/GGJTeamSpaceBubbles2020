@@ -1,6 +1,7 @@
 import pygame as pg
 vec = pg.math.Vector2
 
+
 # Game Settings
 WIDTH = 1920
 HEIGHT = 1080
