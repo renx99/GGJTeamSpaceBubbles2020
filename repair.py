@@ -121,23 +121,7 @@ class Game:
         self.all_sprites.update()
         self.camera.update(self.player)
 
-        # In your game loop, check for key states:
-        if self.pressed == 'left':
-            self.player.pos.x -= PLAYER['speed']
-        if self.pressed == 'right':
-            self.player.pos.x += PLAYER['speed']
-        if self.pressed == 'up':
-            self.player.pos.y -= PLAYER['speed']
-        if self.pressed == 'down':
-            self.player.pos.y += PLAYER['speed']
 
-        self.player.pos = vec(self.player.pos.x, self.player.pos.y)
-
-
-        self.dog.pos.x += ENEMIES['dog']['speed']
-        self.dog.pos.y += ENEMIES['dog']['speed']
-
-        self.dog.pos = vec(self.dog.pos.x, self.dog.pos.y)
 
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
@@ -159,13 +143,13 @@ class Game:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:          # check for key presses
                 if event.key == pygame.K_LEFT:        # left arrow turns left
-                    self.pressed = 'left'
+                    self.player.pressed = 'left'
                 elif event.key == pygame.K_RIGHT:     # right arrow turns right
-                    self.pressed = 'right'
+                    self.player.pressed = 'right'
                 elif event.key == pygame.K_UP:        # up arrow goes up
-                    self.pressed = 'up'
+                    self.player.pressed = 'up'
                 elif event.key == pygame.K_DOWN:     # down arrow goes down
-                    self.pressed = 'down'
+                    self.player.pressed = 'down'
                 elif event.key == pygame.K_p:     # down arrow goes down
                     self.paused
                 elif event.key == pygame.K_ESCAPE:     # down arrow goes down

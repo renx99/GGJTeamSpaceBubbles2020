@@ -49,6 +49,7 @@ class Player(pg.sprite.Sprite):
         self.health = PLAYER['health']
         self.weapon = 'wrench'
         self.damaged = False
+        self.pressed = None
 
     def get_keys(self):
         keys = pg.key.get_pressed()
@@ -90,6 +91,19 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         self.get_keys()
+
+        # In your game loop, check for key states:
+        if self.pressed == 'left':
+            self.pos.x -= PLAYER['speed']
+        if self.pressed == 'right':
+            self.pos.x += PLAYER['speed']
+        if self.pressed == 'up':
+            self.pos.y -= PLAYER['speed']
+        if self.pressed == 'down':
+            self.pos.y += PLAYER['speed']
+
+        self.pos = vec(self.pos.x, self.pos.y)
+
         # slows down the animation rate
         self.stallkludge += 1
         if self.stallkludge > 15:
