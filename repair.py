@@ -10,9 +10,6 @@ import os
 import pygame
 import sys
 
-def bork(mob):
-    print(mob)
-
 class Game:
     def __init__(self):
         pygame.mixer.pre_init(44100, -16, 4,2048)
@@ -108,16 +105,10 @@ class Game:
         self.dog2 = Mob(self, 500, 350)
 
         for i, mob in enumerate(self.mobs):
-            print(mob)
-            print(type(mob))
             self.enumerated_mobs[i] = mob
             seconds = randrange(500,3000)
             e = pygame.event.Event(pygame.USEREVENT + i, {'mob': mob})
-            print(e)
-            print(e.mob)
             pygame.time.set_timer(e.type, seconds)
-            #pygame.event.post(e)
-        print('----')
 
     def run(self):
         # Game loop - set self.playing = false to end the game.
