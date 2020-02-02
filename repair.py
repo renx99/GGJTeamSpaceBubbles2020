@@ -73,7 +73,7 @@ class Game:
         # Initialize all variables and do all the setup for a new game.
         self.all_sprites = pg.sprite.LayeredUpdates()
 
-        game_map = mapprocess.Map(os.path.join(self.map_folder, "test3.map"), self.tiles_folder)
+        game_map = mapprocess.Map(os.path.join(self.map_folder, "exploration_test1.map"), self.tiles_folder)
         self.tilemap = game_map.gettilemap()
 
         self.walls = pg.sprite.Group()
@@ -126,9 +126,9 @@ class Game:
             self.px -= PLAYER['speed']
         if self.pressed == 'right':
             self.px += PLAYER['speed']
-        if self.pressed == 'up' and self.py > 20:
+        if self.pressed == 'up': # and self.py > 20:
             self.py -= PLAYER['speed']
-        if self.pressed == 'down' and self.py < 2085:
+        if self.pressed == 'down': # and self.py < 2085:
             self.py += PLAYER['speed']
 
         self.player.pos = vec(self.px, self.py)
@@ -138,8 +138,8 @@ class Game:
         # print(vec(self.px, self.py))
         # print(self.px)
 
-        print(int(abs(WIDTH/2)))
-        print(int(abs(HEIGHT/2)))
+        # print(int(abs(WIDTH/2)))
+        # print(int(abs(HEIGHT/2)))
 
 
     def draw(self):
