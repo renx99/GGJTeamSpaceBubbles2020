@@ -236,13 +236,13 @@ class Mob(pg.sprite.Sprite):
         #print('dog update')
 
         if self.facing == 'north':
-            self.pos.y -= ENEMIES['dog']['speed']
+            self.pos.y -= ENEMIES[self.mob_type]['speed']
         elif self.facing == 'south':
-            self.pos.y += ENEMIES['dog']['speed']
+            self.pos.y += ENEMIES[self.mob_type]['speed']
         elif self.facing == 'east':
-            self.pos.x += ENEMIES['dog']['speed']
+            self.pos.x += ENEMIES[self.mob_type]['speed']
         elif self.facing == 'west':
-            self.pos.x -= ENEMIES['dog']['speed']
+            self.pos.x -= ENEMIES[self.mob_type]['speed']
         #self.pos.x += ENEMIES['dog']['speed']
         #self.pos.y += ENEMIES['dog']['speed']
 

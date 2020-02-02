@@ -14,7 +14,8 @@ class Game:
     def __init__(self):
         pygame.mixer.pre_init(44100, -16, 4,2048)
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT),
+                pygame.FULLSCREEN|pygame.DOUBLEBUF|pygame.HWSURFACE)
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.load_data()
@@ -22,8 +23,10 @@ class Game:
         self.hud_font = 'arial'
         self.enumerated_mobs = {}
         self.golem_parts = 0
-        self.golem_goal = 99
-
+        self.golem_goal = 1
+        self.level_progression = ['1.map', '2.map', '3.map', '4.map', '5.map']
+        self.current_level = 0;
+        self.exiting = False
 
     def draw_text(self,text, font_name, size, color, x, y, align="topleft"):
         font = pygame.font.SysFont(font_name, size)
@@ -76,7 +79,7 @@ class Game:
         # Initialize all variables and do all the setup for a new game.
         self.all_sprites = pg.sprite.LayeredUpdates()
 
-        map_name = "1.map"
+        map_name = self.level_progression[self.current_level]
         game_map = mapprocess.Map(os.path.join(self.map_folder, map_name), self.tiles_folder)
         self.tilemap = game_map.gettilemap()
 
@@ -106,7 +109,6 @@ class Game:
 
         self.draw_debug = False
         self.paused = False
-        self.night = False
 
         # Spawn dogs with random movemnt timers on 'm' tiles
         # TODO: Fix multple dogs in same ROW issues
@@ -140,6 +142,19 @@ class Game:
             if not self.paused:
                 self.update()
             self.draw()
+            if self.exiting:
+                self.next_level()
+
+    def next_level(self):
+        self.current_level += 1
+        if self.current_level < len(self.level_progression):
+            self.golem_parts = 0
+            self.golem_goal = self.current_level + 1
+            self.show_next_screen()
+            self.exiting = False
+            self.new()
+        elif self.current_level >= len(self.level_progression):
+            self.show_victory_screen()
 
     def quit(self):
         pygame.quit()
@@ -154,9 +169,8 @@ class Game:
 
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
+        self.screen.fill((0, 0, 0))
         self.screen.blit(self.tilemap, self.camera.apply_rect(self.tilemap.get_rect()))
-        for wall in self.walls:
-            pygame.draw.rect(self.screen, (0, 255, 255), self.camera.apply_rect(wall.rect), 1)
 
         for sprite in self.all_sprites:
             if isinstance(sprite, Mob):
@@ -205,6 +219,23 @@ class Game:
                 seconds = randrange(500,3000)
                 pygame.time.set_timer(event.type, seconds)
 
+
+    def show_next_screen(self):
+        self.draw_text('You repaired the Golem but he needs more work!', self.title_font, 100, (255, 0, 0),
+                        WIDTH / 2, HEIGHT / 2, align='center')
+        self.draw_text('Press a key to advance', self.title_font, 75, (255, 255, 255),
+                        WIDTH / 2, HEIGHT * 3 / 4, align='center')
+        pygame.display.flip()
+        self.wait_for_key()
+
+    def show_victory_screen(self):
+        self.draw_text('Your new Golem friend is fixed! You can finally leave the junkyard... together.', self.title_font, 100, (255, 0, 0),
+                        WIDTH / 2, HEIGHT / 2, align='center')
+        self.draw_text('Press a key to quit', self.title_font, 75, (255, 255, 255),
+                        WIDTH / 2, HEIGHT * 3 / 4, align='center')
+        pygame.display.flip()
+        self.wait_for_key()
+        self.quit()
 
     def show_start_screen(self):
         pygame.mixer.music.load(os.path.join(self.music_folder, MENU_MUSIC))
