@@ -10,9 +10,6 @@ import os
 import pygame
 import sys
 
-tempOne = 0
-tempTwo = 0
-
 class Game:
     def __init__(self):
         pygame.mixer.pre_init(44100, -16, 4,2048)
@@ -23,7 +20,6 @@ class Game:
         self.load_data()
         self.title_font = None
         self.enumerated_mobs = {}
-
 
 
     def draw_text(self,text, font_name, size, color, x, y, align="topleft"):
