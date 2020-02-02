@@ -41,7 +41,7 @@ class Map:
                 "walkable": True,
                 "tileimg": self.getmaptile(os.path.join(maptilesfolder, "junkpile6.png"), 0, 0)
             },
-            'A': { # Map Edge
+            'A': { # TODO
                 "walkable": True,
                 "tileimg": self.getmaptile(os.path.join(maptilesfolder, "ua.png"), 1, 0)
             },
