@@ -51,6 +51,33 @@ class Player(pg.sprite.Sprite):
         self.damaged = False
         self.pressed = None
 
+    def attack(self):
+        now = pg.time.get_ticks()
+        if now - self.last_shot > WEAPONS[self.weapon]['rate']:
+            self.last_shot = now
+        print('rawr')
+
+    def whack(self):
+        print('thonk')
+        now = pg.time.get_ticks()
+        if now - self.last_shot > WEAPONS[self.weapon]['rate']:
+            self.last_shot = now
+            dir = self.facing
+            pos = self.pos + BODY_OFFSET.rotate(-self.rot)
+            self.vel = vec(-WEAPONS[self.weapon]['kickback'], 0).rotate(-self.rot)
+            for i in range(9999999999999999999999999):
+                spread = uniform(-WEAPONS[self.weapon]['spread'], WEAPONS[self.weapon]['spread'])
+                Bullet(self.game, pos, dir.rotate(spread), WEAPONS[self.weapon]['damage'])
+                snd = choice(self.game.weapon_sounds[self.weapon])
+                if snd.get_num_channels() > 2:
+                    snd.stop()
+                snd.play()
+            MuzzleFlash(self.game, pos)
+
+    def hit(self):
+        self.damaged = True
+        self.damage_alpha = chain(DAMAGE_ALPHA * 4)
+
     def get_keys(self):
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
@@ -64,45 +91,22 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_SPACE]:
             self.attack()
 
-    def attack(self):
-        now = pg.time.get_ticks()
-        if now - self.last_shot > WEAPONS[self.weapon]['rate']:
-            self.last_shot = now
-
-    def shoot(self):
-        now = pg.time.get_ticks()
-        if now - self.last_shot > WEAPONS[self.weapon]['rate']:
-            self.last_shot = now
-            dir = vec(1, 0).rotate(-self.rot)
-            pos = self.pos + BARREL_OFFSET.rotate(-self.rot)
-            self.vel = vec(-WEAPONS[self.weapon]['kickback'], 0).rotate(-self.rot)
-            for i in range(WEAPONS[self.weapon]['bullet_count']):
-                spread = uniform(-WEAPONS[self.weapon]['spread'], WEAPONS[self.weapon]['spread'])
-                Bullet(self.game, pos, dir.rotate(spread), WEAPONS[self.weapon]['damage'])
-                snd = choice(self.game.weapon_sounds[self.weapon])
-                if snd.get_num_channels() > 2:
-                    snd.stop()
-                snd.play()
-            MuzzleFlash(self.game, pos)
-
-    def hit(self):
-        self.damaged = True
-        self.damage_alpha = chain(DAMAGE_ALPHA * 4)
-
     def update(self):
         self.get_keys()
 
         # In your game loop, check for key states:
+        print(self.pressed)
         if self.pressed == 'left':
             self.pos.x -= PLAYER['speed']
-        if self.pressed == 'right':
+        elif self.pressed == 'right':
             self.pos.x += PLAYER['speed']
-        if self.pressed == 'up':
+        elif self.pressed == 'up':
             self.pos.y -= PLAYER['speed']
-        if self.pressed == 'down':
+        elif self.pressed == 'down':
             self.pos.y += PLAYER['speed']
-
-        self.pos = vec(self.pos.x, self.pos.y)
+        elif self.pressed == None:
+            pass
+        #self.pos = vec(self.pos.x, self.pos.y)
 
         # slows down the animation rate
         self.stallkludge += 1
@@ -256,6 +260,7 @@ class Mob(pg.sprite.Sprite):
 
 class Bullet(pg.sprite.Sprite):
     def __init__(self, game, pos, dir, damage):
+        print('abng')
         self._layer = LAYER['bullet']
         self.groups = game.all_sprites, game.bullets
         pg.sprite.Sprite.__init__(self, self.groups)

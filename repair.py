@@ -178,7 +178,7 @@ class Game:
                 elif event.key == pygame.K_ESCAPE:  # down arrow goes down
                     self.quit()
             elif event.type == pygame.KEYUP:        # check for key releases
-                self.pressed = None
+                self.player.pressed = None
             elif event.type >= pygame.USEREVENT:
                 pygame.time.set_timer(event.type, 0)
                 mob = self.enumerated_mobs[event.type - pygame.USEREVENT]

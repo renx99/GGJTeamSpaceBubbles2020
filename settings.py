@@ -8,7 +8,6 @@ HEIGHT = int(abs(1080 ))
 FPS = 60
 TITLE = 'Rust Busters <working title>'
 
-
 TILESIZE = 32
 GRIDWIDTH = WIDTH/TILESIZE
 GRIDHEIGHT = HEIGHT/TILESIZE
@@ -29,24 +28,29 @@ PLAYER = {
         'regen': 10,
         'speed': 5,
         'hit_rect': pg.Rect(32, 0, 32, 64),
-        'image': 'dude.png'
+        'image': 'dude.png',
+        'weapon': 'wrench'
     }
 
 WEAPON_OFFSET = vec(30,10)
+BODY_OFFSET = vec(30,10)
 
 # Weapon Settings
 WEAPONS = {
         'wrench': {
                 'range': 2,
-                'damage': 50
+                'damage': 50,
+                'rate': 10
             },
         'bite': {
                 'damage': 50,
                 'range': 1,
+                'rate': 10
             },
         'gun': {
                 'range': 5,
                 'damage': 100,
+                'rate': 10
             }
     }
 
