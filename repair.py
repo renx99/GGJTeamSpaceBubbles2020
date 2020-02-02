@@ -74,7 +74,7 @@ class Game:
         # Initialize all variables and do all the setup for a new game.
         self.all_sprites = pg.sprite.LayeredUpdates()
 
-        map_name = "exploration_test1.map"
+        map_name = "1.map"
         game_map = mapprocess.Map(os.path.join(self.map_folder, map_name), self.tiles_folder)
         self.tilemap = game_map.gettilemap()
 
