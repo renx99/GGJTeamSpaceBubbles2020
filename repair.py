@@ -14,7 +14,7 @@ class Game:
     def __init__(self):
         pygame.mixer.pre_init(44100, -16, 4,2048)
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.load_data()
@@ -41,8 +41,10 @@ class Game:
         self.music_folder = os.path.join(game_folder, 'music')
         self.map_folder = os.path.join(game_folder, 'maps')
         self.player_img = pygame.image.load(os.path.join(graphics_folder, PLAYER['image']))
-        self.mob_img = pygame.image.load(os.path.join(graphics_folder, ENEMIES['dog']['image']))
-        self.mob_img = pygame.image.load(os.path.join(graphics_folder, ENEMIES['dog']['image']))
+        self.mob_img = {}
+        for mob_type in ENEMIES.keys():
+            img_path = os.path.join(graphics_folder, ENEMIES[mob_type]['image'])
+            self.mob_img[mob_type] = pygame.image.load(img_path)
 
         # Sound loading
         self.effect_sounds = []
@@ -112,7 +114,7 @@ class Game:
         d_rows = [l.index('m') if 'm' in l else 0 for l in grid]
         d_spawns = [(x, y) for y, x in enumerate(d_rows) if x != 0]
         for i, (x, y) in enumerate(d_spawns):
-            self.enumerated_mobs[i] = Mob(self, x * TILESIZE, y * TILESIZE)
+            self.enumerated_mobs[i] = Mob(self, x * TILESIZE, y * TILESIZE, 'dog')
             seconds = randrange(500,3000)
             e = pygame.event.Event(pygame.USEREVENT + i)
             pygame.time.set_timer(e.type, seconds)
@@ -123,7 +125,7 @@ class Game:
         g_rows = [l.index('M') if 'M' in l else 0 for l in grid]
         g_spawns = [(x, y) for y, x in enumerate(g_rows) if x != 0]
         for i, (x, y) in enumerate(g_spawns):
-            self.enumerated_mobs[i + j] = Mob(self, x * TILESIZE, y * TILESIZE)
+            self.enumerated_mobs[i + j] = Mob(self, x * TILESIZE, y * TILESIZE, 'guard')
             seconds = randrange(300,2000)
             e = pygame.event.Event(pygame.USEREVENT + i + j)
             pygame.time.set_timer(e.type, seconds)

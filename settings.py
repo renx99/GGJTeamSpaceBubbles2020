@@ -3,8 +3,8 @@ vec = pg.math.Vector2
 
 
 # Game Settings
-WIDTH = int(abs(1920 ))
-HEIGHT = int(abs(1080 ))
+WIDTH = int(abs(1280 ))
+HEIGHT = int(abs(720 ))
 FPS = 60
 TITLE = 'Rust Busters <working title>'
 
@@ -40,17 +40,18 @@ WEAPONS = {
         'wrench': {
                 'range': 2,
                 'damage': 50,
-                'rate': 10
+                'rate': 2
             },
         'bite': {
                 'damage': 34,
                 'range': 1,
-                'rate': 10
+                'rate': 1
             },
         'gun': {
                 'range': 5,
-                'damage': 50,
-                'rate': 10
+                'damage': 60,
+                'rate': 1
+            }
     }
 
 # Enemy Settings
@@ -66,7 +67,7 @@ ENEMIES = {
         'guard': {
             'speed': 1,
             'weapon': 'gun',
-            'image': 'temp-guard.png',
+            'image': 'guard.png',
             'hit_rect': pg.Rect(0, 0, 32, 64),
             'health': 200,
             'radius': 10

@@ -26,6 +26,9 @@ def collide_with_walls(sprite, group, dir):
             sprite.vel.y = 0
             sprite.hit_rect.centery = sprite.pos.y
 
+def vec_distance(pos, target):
+    return (abs(pos.x - target.x), abs(pos.y - target.y))
+
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -51,28 +54,68 @@ class Player(pg.sprite.Sprite):
         self.damaged = False
         self.pressed = None
 
-    def attack(self):
+    def action(self):
+        # Attempt to located object within 'Range'
+        # Priority goes 'Mob' -> 'Part/Mining' -> 'Door/Drop'?
+        mob = self.find_closest_mob()
+        junk = self.find_closest_junk()
+        obj = self.find_closest_obj()
+        if mob:
+             self.attack(mob)
+        elif junk:
+            self.whack(junk)
+        elif obj:
+            pass
+
+
+    def in_range(self, pos, target):
+        reach = WEAPONS[PLAYER['weapon']]['range'] * TILESIZE
+        dx, dy = vec_distance(pos, target)
+        dbg = 'pos: {},{} - target: {},{} - delta: {},{} - reach: {}'
+        #print(dbg.format(str(pos.x), str(pos.y), str(target.x), str(target.y),
+        #    str(dx), str(dy), str(reach)))
+        return dx < reach and dy < reach
+
+    def find_closest_mob(self):
+        close = [m for m in self.game.mobs if self.in_range(self.pos, m.pos)]
+        if len(close) == 0:
+            return None
+        elif len(close) == 1:
+            return close.pop()
+        else:
+            # TODO: Need to find the closest
+            return close.pop()
+
+    def find_closest_junk(self):
+        pass
+
+    def find_closest_obj(self):
+        pass
+
+    def whack(self, junk):
         now = pg.time.get_ticks()
         if now - self.last_shot > WEAPONS[self.weapon]['rate']:
             self.last_shot = now
-        print('rawr')
+            print('thonk')
 
-    def whack(self):
-        print('thonk')
+    def attack(self, mob):
         now = pg.time.get_ticks()
-        if now - self.last_shot > WEAPONS[self.weapon]['rate']:
+        print(now - self.last_shot)
+        if now - self.last_shot > WEAPONS[self.weapon]['rate'] * 1000:
+            print('rawr')
             self.last_shot = now
             dir = self.facing
-            pos = self.pos + BODY_OFFSET.rotate(-self.rot)
-            self.vel = vec(-WEAPONS[self.weapon]['kickback'], 0).rotate(-self.rot)
-            for i in range(9999999999999999999999999):
-                spread = uniform(-WEAPONS[self.weapon]['spread'], WEAPONS[self.weapon]['spread'])
-                Bullet(self.game, pos, dir.rotate(spread), WEAPONS[self.weapon]['damage'])
-                snd = choice(self.game.weapon_sounds[self.weapon])
-                if snd.get_num_channels() > 2:
-                    snd.stop()
-                snd.play()
-            MuzzleFlash(self.game, pos)
+            pos = self.pos + BODY_OFFSET.rotate(DIRECTIONS[self.facing])
+
+            mob.hit(WEAPONS[self.weapon]['damage'])
+
+            print('yelp')
+            """
+            snd = choice(self.game.weapon_sounds[self.weapon])
+            if snd.get_num_channels() > 2:
+                snd.stop()
+            snd.play()
+            """
 
     def hit(self):
         self.damaged = True
@@ -89,13 +132,13 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.facing = 'south'
         if keys[pg.K_SPACE]:
-            self.attack()
+            self.action()
 
     def update(self):
         self.get_keys()
 
         # In your game loop, check for key states:
-        print(self.pressed)
+        #print(self.pressed)
         if self.pressed == 'left':
             self.pos.x -= PLAYER['speed']
         elif self.pressed == 'right':
@@ -105,6 +148,7 @@ class Player(pg.sprite.Sprite):
         elif self.pressed == 'down':
             self.pos.y += PLAYER['speed']
         elif self.pressed == None:
+            # TODO: pause animation
             pass
         #self.pos = vec(self.pos.x, self.pos.y)
 
@@ -146,8 +190,8 @@ class Player(pg.sprite.Sprite):
 
 
 class Mob(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
-        mob_type = 'dog'  # TODO: add gaurds
+    def __init__(self, game, x, y, m_type):
+        self.mob_type = m_type
         self._layer = LAYERS['enemy']
         self.groups = game.all_sprites, game.mobs
         pg.sprite.Sprite.__init__(self, self.groups)
@@ -155,18 +199,19 @@ class Mob(pg.sprite.Sprite):
         self.imageindex = 0
         self.facing = 'south'
         self.game = game
-        self.imagemap = game.mob_img.copy()
-        self.image = self.imagemap.subsurface(ENEMIES[mob_type]['hit_rect'])
+        self.pingpong = 1
+        self.imagemap = game.mob_img[m_type].copy()
+        self.image = self.imagemap.subsurface(ENEMIES[m_type]['hit_rect'])
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-        self.hit_rect = ENEMIES[mob_type]['hit_rect'].copy()
+        self.hit_rect = ENEMIES[m_type]['hit_rect'].copy()
         self.hit_rect.center = self.rect.center
         self.pos = vec(x, y)
         self.vel = vec(0, 0)
         self.rect.center = self.pos
-        self.health = ENEMIES[mob_type]['health']
-        self.radius = ENEMIES[mob_type]['radius']
-        self.speed = choice([ENEMIES[mob_type]['speed']])
+        self.health = ENEMIES[m_type]['health']
+        self.radius = ENEMIES[m_type]['radius']
+        self.speed = choice([ENEMIES[m_type]['speed']])
         self.target = game.player
 
     def avoid_mobs(self):
@@ -175,6 +220,11 @@ class Mob(pg.sprite.Sprite):
                 dist = self.pos - mob.pos
                 if 0 < dist.length() < AVOID_RADIUS:
                     self.acc += dist.normalize()
+
+    def hit(self, damage):
+        self.damaged = True
+        self.health -= damage
+        self.update()
 
     def get_facing(self):
         self.facing = 'west'
@@ -208,16 +258,30 @@ class Mob(pg.sprite.Sprite):
         self.stallkludge += 1
         if self.stallkludge > 15:
             self.stallkludge = 0
-            self.imageindex = (self.imageindex + 1) % 4
-
-            if self.facing == 'south':
-                self.image = self.imagemap.subsurface(self.imageindex*32, 3*32, 32, 32)
-            elif self.facing == 'north':
-                self.image = self.imagemap.subsurface(self.imageindex*32, 1*32, 32, 32)
-            elif self.facing == 'east':
-                self.image = self.imagemap.subsurface(self.imageindex*32, 2*32, 32, 32)
-            elif self.facing == 'west':
-                self.image = self.imagemap.subsurface(self.imageindex*32, 0*32, 32, 32)
+            if self.mob_type == 'dog':
+                self.imageindex = (self.imageindex + 1) % 4
+                if self.facing == 'south':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 3*32, 32, 32)
+                elif self.facing == 'north':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 1*32, 32, 32)
+                elif self.facing == 'east':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 2*32, 32, 32)
+                elif self.facing == 'west':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 0*32, 32, 32)
+            elif self.mob_type == 'guard':
+                if self.imageindex <= 0:
+                    self.pingpong = 1
+                elif self.imageindex >= 2:
+                    self.pingpong = -1
+                self.imageindex += self.pingpong
+                if self.facing == 'south':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 0*64, 32, 64)
+                elif self.facing == 'east':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 1*64, 32, 64)
+                elif self.facing == 'north':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 2*64, 32, 64)
+                elif self.facing == 'west':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 3*64, 32, 64)
 
         if target_dist.length_squared() < ENEMIES[mob_type]['radius']**2:
             # Chase mode
@@ -240,9 +304,9 @@ class Mob(pg.sprite.Sprite):
         self.rect.center = self.hit_rect.center
 
         if self.health <= 0:
-            choice(self.game.zombie_hit_sounds).play()
+            #choice(self.game.mob_hit_sounds).play()
             self.kill()
-            self.game.map_img.blit(self.game.splat, self.pos - vec(32, 32))
+            #self.game.map_img.blit(self.game.splat, self.pos - vec(32, 32))
 
     def draw_health(self):
         enemy = 'dog'  # TODO: add guards
@@ -260,7 +324,7 @@ class Mob(pg.sprite.Sprite):
 
 class Bullet(pg.sprite.Sprite):
     def __init__(self, game, pos, dir, damage):
-        print('abng')
+        print('bang')
         self._layer = LAYER['bullet']
         self.groups = game.all_sprites, game.bullets
         pg.sprite.Sprite.__init__(self, self.groups)

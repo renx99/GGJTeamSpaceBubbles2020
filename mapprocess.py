@@ -15,33 +15,38 @@ class Map:
         self.tileimgs = {
             # TODO numerical order 0-9 then Uppercase A-a done alpabetically A-a---Z-z
             '0': {'walkable': True, 'tileimg': map_t('dirt1tile.png', 0, 0)},
-            '1': {'walkable': True, 'tileimg': map_t('junkpile1.png', 0, 0)},
-            '2': {'walkable': True, 'tileimg': map_t('junkpile2.png', 0, 0)},
-            '3': {'walkable': True, 'tileimg': map_t('junkpile3.png', 0, 0)},
-            '4': {'walkable': True, 'tileimg': map_t('junkpile4.png', 0, 0)},
-            '5': {'walkable': True, 'tileimg': map_t('junkpile5.png', 0, 0)},
-            '6': {'walkable': True, 'tileimg': map_t('junkpile6.png', 0, 0)},
+            '1': {'walkable': True, 'tileimg': map_t('junkpile1.png', 0, 0)},  # Used
+            '2': {'walkable': True, 'tileimg': map_t('junkpile2.png', 0, 0)},  # Used
+            '3': {'walkable': True, 'tileimg': map_t('junkpile3.png', 0, 0)},  # Used
+            '4': {'walkable': True, 'tileimg': map_t('junkpile4.png', 0, 0)},  # Used
+            '5': {'walkable': True, 'tileimg': map_t('junkpile5.png', 0, 0)},  # Used
+            '6': {'walkable': True, 'tileimg': map_t('junkpile6.png', 0, 0)},  # Used
             'A': {'walkable': True, 'tileimg': map_t('ua.png', 1, 0)},  # TODO
-            'C': {'walkable': False, 'tileimg': map_t('chainlink.png', 0, 0)},  # chainlink
+            'C': {'walkable': False, 'tileimg': map_t('chainlink.png', 0, 0)},  # chainlink Used
             'c': {'walkable': False, 'tileimg': map_t('carpile.png', 1, 0)},  # TODO
-            'D': {'walkable': True, 'tileimg': map_t('dirtandgrasses.png', 0, 0)},  # Dirt
-            'd': {'walkable': True, 'tileimg': map_t('dirtandgrasses.png', 1, 1)},  # Dirt?
+            'D': {'walkable': True, 'tileimg': map_t('dirtandgrasses.png', 0, 0)},  # Dirt Used
+            'd': {'walkable': True, 'tileimg': map_t('dirtandgrasses.png', 1, 1)},  # Dirt? Used
             'E': {'walkable': True, 'tileimg': map_t('grass1edges.png', 0, 0)},  # grass1edges
-            'e': {'walkable': True, 'tileimg': map_t('grass1edges.png', 1, 0)}, #  grass1edges
-            'F': {'walkable': True, 'tileimg': map_t('grass1edges.png', 1, 1)},
+            'e': {'walkable': True, 'tileimg': map_t('grass1edges.png', 1, 0)}, #  grass1edges  Used
+            'F': {'walkable': True, 'tileimg': map_t('grass1edges.png', 1, 1)},  # Used
             'f': {'walkable': True, 'tileimg': map_t('grass1edges.png', 0, 1)},
-            'G': {'walkable': True, 'tileimg': map_t('grasses.png', 1, 0)},
-            'g': {'walkable': True, 'tileimg': map_t('dirtandgrasses.png', 0, 1)},
+            'G': {'walkable': True, 'tileimg': map_t('grasses.png', 1, 0)},  # Used
+            'g': {'walkable': True, 'tileimg': map_t('dirtandgrasses.png', 0, 1)},  # Used
             'J': {'walkable': False, 'tileimg': map_t('midjunkpile3.png', 1, 0)},
-            'j': {'walkable': True, 'tileimg': map_t('dirt1tile.png', 0, 0)},
-            'P': {'walkable': False, 'tileimg': map_t('carpile.png', 0, 0)},  # Carpile
-            'p': {'walkable': False, 'tileimg': map_t('carpile.png', 1, 0)},  # Carpile
-            'Q': {'walkable': False, 'tileimg': map_t('carpile.png', 0, 1)},  # Carpile
-            'q': {'walkable': False, 'tileimg': map_t('carpile.png', 1, 1)},  # Carpile
-            'S': {'walkable': True, 'tileimg': map_t('grasses.png', 1, 0)},  # Spawn
-            'z': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)},  # End place holder
-            'm': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)}  # Mob, small (dog)
+            'j': {'walkable': True, 'tileimg': map_t('dirt1tile.png', 0, 0)},  # Used
+            'M': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)},  # Mob, large (guard)
+            'm': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)},  # Mob, small (dog)
+            'P': {'walkable': False, 'tileimg': map_t('carpile.png', 0, 0)},  # Car pile Used
+            'p': {'walkable': False, 'tileimg': map_t('carpile.png', 1, 0)},  # Car pile Used
+            'Q': {'walkable': False, 'tileimg': map_t('carpile.png', 0, 1)},  # Car pile Used
+            'q': {'walkable': False, 'tileimg': map_t('carpile.png', 1, 1)},  # Car pile Used
+            'S': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)},  # Spawn Used
+            'x': {'walkable': False, 'tileimg': map_t('Golem_3d_paint.png', 0, 0)},  # Golem Used
+            'y': {'walkable': False, 'tileimg': map_t('Golem_3d_paint.png', 0, 0)},  # Golem part Used
+            'Z': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)},  # Entrance
+            'z': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)}  # Exit
         }
+
         if filename:
             self.loadmap(filename)
 
