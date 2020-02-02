@@ -15,7 +15,31 @@ class Map:
             # TODO numerical order 0-9 then Uppercase A-a done alpabetically A-a---Z-z
             '0': {
                 "walkable": True,
-                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "grasses.png"), 1, 0)
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "dirt1tile.png"), 0, 0)
+            },
+            '1': {
+                "walkable": True,
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "junkpile1.png"), 0, 0)
+            },
+            '2': {
+                "walkable": True,
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "junkpile2.png"), 0, 0)
+            },
+            '3': {
+                "walkable": True,
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "junkpile3.png"), 0, 0)
+            },
+            '4': {
+                "walkable": True,
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "junkpile4.png"), 0, 0)
+            },
+            '5': {
+                "walkable": True,
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "junkpile5.png"), 0, 0)
+            },
+            '6': {
+                "walkable": True,
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "junkpile6.png"), 0, 0)
             },
             'A': { # Map Edge
                 "walkable": True,
@@ -37,13 +61,21 @@ class Map:
                 "walkable": True,
                 "tileimg": self.getmaptile(os.path.join(maptilesfolder, "dirtandgrasses.png"), 1, 1)
             },
-            'E': { # grass1edges # top left
+            'E': { # grass1edges
+                "walkable": True,
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "grass1edges.png"), 0, 0)
+            },
+            'e': {# grass1edges
+                "walkable": True,
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "grass1edges.png"), 1, 0)
+            },
+            'F': {
                 "walkable": True,
                 "tileimg": self.getmaptile(os.path.join(maptilesfolder, "grass1edges.png"), 1, 1)
             },
-            'e': {
+            'f': {
                 "walkable": True,
-                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "grasses.png"), 1, 0)
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "grass1edges.png"), 0, 1)
             },
             'G': {
                 "walkable": True,
@@ -51,10 +83,10 @@ class Map:
             },
             'g': {
                 "walkable": True,
-                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "0.png"), 0, 1)
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "dirtandgrasses.png"), 0, 1)
             },
             'J': {
-                "walkable": True,
+                "walkable": False,
                 "tileimg": self.getmaptile(os.path.join(maptilesfolder, "midjunkpile3.png"), 1, 0)
             },
             'j': {
@@ -83,8 +115,8 @@ class Map:
             },
             'z': { # End place holder
                 "walkable": True,
-                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "z.png"), 1, 0)
-            },
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "door.png"), 0, 0)
+            }
 
         }
         if filename:
