@@ -113,7 +113,7 @@ class Player(pg.sprite.Sprite):
                 self.damaged = False
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
-        self.pos += self.vel* self.game.dt
+        self.pos += self.vel * self.game.dt
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
         self.hit_rect.centery = self.pos.y
@@ -125,8 +125,6 @@ class Player(pg.sprite.Sprite):
         if self.health > PLAYER['health']:
             self.health = PLAYER['health']
 
-    def pick_junk(self, junk):
-        pass
 
 class Mob(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -142,11 +140,10 @@ class Mob(pg.sprite.Sprite):
         self.hit_rect.center = self.rect.center
         self.pos = vec(x, y)
         self.vel = vec(0, 0)
-        self.acc = vec(0, 0)
         self.rect.center = self.pos
-        self.rot = 0
         self.health = ENEMIES[mob_type]['health']
-        self.speed = choice(ENEMIES[mob_type]['speed'])
+        self.radius = ENEMIES[mob_type]['radius']
+        self.speed = choice([ENEMIES[mob_type]['speed']])
         self.target = game.player
 
     def avoid_mobs(self):
@@ -157,24 +154,34 @@ class Mob(pg.sprite.Sprite):
                     self.acc += dist.normalize()
 
     def update(self):
+        #print('dog update')
         target_dist = self.target.pos - self.pos
-        if target_dist.length_squared() < DETECT_RADIUS**2:
-            if random() < 0.002:
-                choice(self.game.zombie_moan_sounds).play()
-            self.rot = target_dist.angle_to(vec(1, 0))
-            self.image = pg.transform.rotate(self.game.mob_img, self.rot)
-            self.rect.center = self.pos
-            self.acc = vec(1, 0).rotate(-self.rot)
-            self.avoid_mobs()
-            self.acc.scale_to_length(self.speed)
-            self.acc += self.vel * -1
-            self.vel += self.acc * self.game.dt
-            self.pos += self.vel * self.game.dt + 0.5 * self.acc * self.game.dt ** 2
-            self.hit_rect.centerx = self.pos.x
-            collide_with_walls(self, self.game.walls, 'x')
-            self.hit_rect.centery = self.pos.y
-            collide_with_walls(self, self.game.walls, 'y')
-            self.rect.center = self.hit_rect.center
+        mob_type = 'dog'
+
+        if random() < 0.002:
+            print('bark')
+            #choice(self.game.zombie_moan_sounds).play()
+
+        if target_dist.length_squared() < ENEMIES[mob_type]['radius']**2:
+            # Chase mode
+            # TODO: make chase
+            pass
+        else:
+            # Patrol Mode
+            pass
+
+            #self.image = pg.transform.rotate(self.game.mob_img, self.rot)
+        self.pos += self.vel * self.game.dt
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+        #self.avoid_mobs()
+        self.pos += self.vel * self.game.dt
+        self.hit_rect.centerx = self.pos.x
+        collide_with_walls(self, self.game.walls, 'x')
+        self.hit_rect.centery = self.pos.y
+        collide_with_walls(self, self.game.walls, 'y')
+        self.rect.center = self.hit_rect.center
+
         if self.health <= 0:
             choice(self.game.zombie_hit_sounds).play()
             self.kill()
@@ -183,11 +190,11 @@ class Mob(pg.sprite.Sprite):
     def draw_health(self):
         enemy = 'dog'  # TODO: add guards
         if self.health > 60:
-            col = GREEN
+            col = (0, 255, 0)  # GREEN
         elif self.health > 30:
-            col = YELLOW
+            col = (255, 255, 0)  # YELLOW
         else:
-            col = RED
+            col = (0, 0, 255)  # RED
         width = int(self.rect.width * self.health / ENEMIES[enemy]['health'])
         self.health_bar = pg.Rect(0, 0, width, 7)
         if self.health < ENEMIES[enemy]['health']:

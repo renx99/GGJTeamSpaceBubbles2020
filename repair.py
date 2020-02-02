@@ -34,6 +34,7 @@ class Game:
         music_folder = os.path.join(game_folder, 'music')
         self.map_folder = os.path.join(game_folder, 'maps')
         self.player_img = pygame.image.load(os.path.join(graphics_folder, PLAYER['image']))
+        self.mob_img = pygame.image.load(os.path.join(graphics_folder, ENEMIES['dog']['image']))
 
         # Sound loading
 
@@ -95,7 +96,11 @@ class Game:
 
         self.mapx = -(self.tilemap.get_width() / 2)
         self.mapy = -(self.tilemap.get_height() / 2)
+        print('make new player')
         self.player = Player(self, self.px, self.py)
+
+        self.dog = Mob(self, 150, 300)
+        self.dog2 = Mob(self, 300, 350)
 
     def run(self):
         # Game loop - set self.playing = false to end the game.
@@ -119,15 +124,21 @@ class Game:
 
         # In your game loop, check for key states:
         if self.pressed == 'left':
-            self.px -= PLAYER['speed']
+            self.player.pos.x -= PLAYER['speed']
         if self.pressed == 'right':
-            self.px += PLAYER['speed']
+            self.player.pos.x += PLAYER['speed']
         if self.pressed == 'up':
-            self.py -= PLAYER['speed']
+            self.player.pos.y -= PLAYER['speed']
         if self.pressed == 'down':
-            self.py += PLAYER['speed']
+            self.player.pos.y += PLAYER['speed']
 
-        self.player.pos = vec(self.px, self.py)
+        self.player.pos = vec(self.player.pos.x, self.player.pos.y)
+
+
+        self.dog.pos.x += ENEMIES['dog']['speed']
+        self.dog.pos.y += ENEMIES['dog']['speed']
+
+        self.dog.pos = vec(self.dog.pos.x, self.dog.pos.y)
 
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
@@ -135,14 +146,6 @@ class Game:
         for wall in self.walls:
             pygame.draw.rect(self.screen, (0, 255, 255), self.camera.apply_rect(wall.rect), 1)
 
-        """
-        pygame.draw.circle(
-            self.screen,
-            (255, 255, 255),
-            (int(self.px), int(self.py)),
-            16
-        )
-        """
         for sprite in self.all_sprites:
             if isinstance(sprite, Mob):
                 sprite.draw_health()
@@ -151,10 +154,6 @@ class Game:
 
     def events(self):
         # Catch all events here
-        self.pressed_left = False
-        self.pressed_right = False
-        self.pressed_down = False
-        self.pressed_up = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -162,7 +161,6 @@ class Game:
             elif event.type == pygame.KEYDOWN:          # check for key presses
                 self.go = True
                 print('key-down')
-                self.player.pos = vec(self.px, self.py)
                 if event.key == pygame.K_LEFT:        # left arrow turns left
                     self.pressed = 'left'
                 elif event.key == pygame.K_RIGHT:     # right arrow turns right

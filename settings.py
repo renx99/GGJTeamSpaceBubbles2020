@@ -54,16 +54,18 @@ ENEMIES = {
         'dog': {
             'speed': 3,
             'weapon': 'bite',
-            'img': 'temp-dog.png',
+            'image': 'temp-dog.png',
             'hit_rect': pg.Rect(0, 0, 64, 64),
-            'health': 100
+            'health': 100,
+            'radius': 10
         },
         'guard': {
             'speed': 1,
             'weapon': 'gun',
-            'img': 'temp-guard.png',
+            'image': 'temp-guard.png',
             'hit_rect': pg.Rect(0, 0, 128, 128),
-            'health': 200
+            'health': 200,
+            'radius': 10
         }
     }
 
