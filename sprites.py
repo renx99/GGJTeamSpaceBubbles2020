@@ -26,6 +26,7 @@ def collide_with_walls(sprite, group, dir):
             sprite.vel.y = 0
             sprite.hit_rect.centery = sprite.pos.y
 
+
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self._layer = LAYERS['player']
@@ -36,7 +37,7 @@ class Player(pg.sprite.Sprite):
         self.pingpong = 1
         self.imageindex = 0
         self.imagemap = game.player_img
-        self.image = self.imagemap.subsurface(1*32, 0*64, 32, 64)
+        self.image = self.imagemap.subsurface(PLAYER['hit_rect'])
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.hit_rect = PLAYER['hit_rect']
@@ -49,8 +50,7 @@ class Player(pg.sprite.Sprite):
         self.weapon = 'wrench'
         self.damaged = False
 
-    def get_keys(self):  # TODO: convert to face cardinals
-        #self.vel = vec(0, 0)
+    def get_keys(self):
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             self.facing = 'west'
@@ -90,6 +90,7 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         self.get_keys()
+        # slows down the animation rate
         self.stallkludge += 1
         if self.stallkludge > 15:
             self.stallkludge = 0
@@ -132,8 +133,12 @@ class Mob(pg.sprite.Sprite):
         self._layer = LAYERS['enemy']
         self.groups = game.all_sprites, game.mobs
         pg.sprite.Sprite.__init__(self, self.groups)
+        self.stallkludge = 0
+        self.imageindex = 0
+        self.facing = 'south'
         self.game = game
-        self.image = game.mob_img.copy()
+        self.imagemap = game.mob_img.copy()
+        self.image = self.imagemap.subsurface(ENEMIES[mob_type]['hit_rect'])
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.hit_rect = ENEMIES[mob_type]['hit_rect'].copy()
@@ -153,6 +158,12 @@ class Mob(pg.sprite.Sprite):
                 if 0 < dist.length() < AVOID_RADIUS:
                     self.acc += dist.normalize()
 
+    def get_facing(self):
+        self.facing = 'west'
+        self.facing = 'east'
+        self.facing = 'north'
+        self.facing = 'south'
+
     def update(self):
         #print('dog update')
         target_dist = self.target.pos - self.pos
@@ -161,6 +172,20 @@ class Mob(pg.sprite.Sprite):
         if random() < 0.002:
             print('bark')
             #choice(self.game.zombie_moan_sounds).play()
+
+        self.stallkludge += 1
+        if self.stallkludge > 15:
+            self.stallkludge = 0
+            self.imageindex = (self.imageindex + 1) % 4
+
+            if self.facing == 'south':
+                self.image = self.imagemap.subsurface(self.imageindex*32, 3*32, 32, 32)
+            elif self.facing == 'east':
+                self.image = self.imagemap.subsurface(self.imageindex*32, 1*32, 32, 32)
+            elif self.facing == 'north':
+                self.image = self.imagemap.subsurface(self.imageindex*32, 2*32, 32, 32)
+            elif self.facing == 'west':
+                self.image = self.imagemap.subsurface(self.imageindex*32, 0*32, 32, 32)
 
         if target_dist.length_squared() < ENEMIES[mob_type]['radius']**2:
             # Chase mode

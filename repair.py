@@ -96,7 +96,6 @@ class Game:
 
         self.mapx = -(self.tilemap.get_width() / 2)
         self.mapy = -(self.tilemap.get_height() / 2)
-        print('make new player')
         self.player = Player(self, self.px, self.py)
 
         self.dog = Mob(self, 150, 300)
@@ -159,8 +158,6 @@ class Game:
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:          # check for key presses
-                self.go = True
-                print('key-down')
                 if event.key == pygame.K_LEFT:        # left arrow turns left
                     self.pressed = 'left'
                 elif event.key == pygame.K_RIGHT:     # right arrow turns right
@@ -169,9 +166,11 @@ class Game:
                     self.pressed = 'up'
                 elif event.key == pygame.K_DOWN:     # down arrow goes down
                     self.pressed = 'down'
+                elif event.key == pygame.K_p:     # down arrow goes down
+                    self.paused
+                elif event.key == pygame.K_ESCAPE:     # down arrow goes down
+                    self.quit()
             elif event.type == pygame.KEYUP:            # check for key releases
-                self.go = False
-                print('key-up')
                 self.pressed = None
 
 
