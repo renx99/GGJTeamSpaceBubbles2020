@@ -24,9 +24,10 @@ class Game:
         self.enumerated_mobs = {}
         self.golem_parts = 0
         self.golem_goal = 1
-        self.level_progression = ['1.map', '2.map', '3.map', '4.map', '5.map']
+        self.level_progression = ['5.map','1.map', '2.map', '3.map', '4.map']
         self.current_level = 0;
-        self.exiting = False
+        self.exiting = True 
+        self.exitdoors = pygame.Rect(0,0,TILESIZE,TILESIZE)
 
     def draw_text(self,text, font_name, size, color, x, y, align="topleft"):
         font = pygame.font.SysFont(font_name, size)
@@ -42,6 +43,7 @@ class Game:
         self.music_folder = os.path.join(game_folder, 'music')
         self.map_folder = os.path.join(game_folder, 'maps')
         self.player_img = pygame.image.load(os.path.join(graphics_folder, PLAYER['image']))
+        self.winimg = pygame.image.load(os.path.join(graphics_folder, 'winbackground.png'))
         self.mob_img = {}
         for mob_type in ENEMIES.keys():
             img_path = os.path.join(graphics_folder, ENEMIES[mob_type]['image'])
@@ -80,6 +82,7 @@ class Game:
         self.all_sprites = pg.sprite.LayeredUpdates()
 
         map_name = self.level_progression[self.current_level]
+        print(map_name)
         game_map = mapprocess.Map(os.path.join(self.map_folder, map_name), self.tiles_folder)
         self.tilemap = game_map.gettilemap()
 
@@ -94,8 +97,11 @@ class Game:
         else:
             p_x = self.screen.get_width() / 2
             p_y = self.screen.get_height() / 2
-        self.player = Player(self, p_x, p_y)
-
+        print('{},{}'.format(p_x, p_y))
+        if self.current_level == 0:
+            self.player = Player(self, p_x, p_y)
+        else:
+            self.player.pos = vec(p_x, p_y)
         tilemap_w = self.tilemap.get_width()
         tilemap_h = self.tilemap.get_height()
         self.camera = mapprocess.Camera(tilemap_w, tilemap_h)
@@ -135,6 +141,9 @@ class Game:
         e_spawns = [(x, y) for y, x in enumerate(e_rows) if x != 0]
         print(e_spawns)
         # TODO: Find bounding recanting Pixel/rect and then check collison on update
+        top_x = e_spawns[0][0] * TILESIZE 
+        top_y = e_spawns[0][1] * TILESIZE 
+        self.exitdoors = pygame.Rect(top_x,top_y, TILESIZE, len(e_spawns)*TILESIZE)
 
     def run(self):
         # Game loop - set self.playing = false to end the game.
@@ -147,11 +156,10 @@ class Game:
             if not self.paused:
                 self.update()
             self.draw()
-            if self.exiting:
-                self.next_level()
 
     def next_level(self):
         self.current_level += 1
+        """
         if self.current_level < len(self.level_progression):
             self.golem_parts = 0
             self.golem_goal = self.current_level + 1
@@ -159,7 +167,8 @@ class Game:
             self.exiting = False
             self.new()
         elif self.current_level >= len(self.level_progression):
-            self.show_victory_screen()
+        """
+        self.show_victory_screen()
 
     def quit(self):
         pygame.quit()
@@ -226,17 +235,19 @@ class Game:
 
 
     def show_next_screen(self):
-        self.draw_text('You repaired the Golem but he needs more work!', self.title_font, 100, (255, 0, 0),
+        self.draw_text('You repaired the Golem but he needs more work!', self.title_font, 50, (255, 0, 0),
                         WIDTH / 2, HEIGHT / 2, align='center')
-        self.draw_text('Press a key to advance', self.title_font, 75, (255, 255, 255),
+        self.draw_text('Press a key to advance', self.title_font, 50, (255, 255, 255),
                         WIDTH / 2, HEIGHT * 3 / 4, align='center')
         pygame.display.flip()
         self.wait_for_key()
 
     def show_victory_screen(self):
-        self.draw_text('Your new Golem friend is fixed! You can finally leave the junkyard... together.', self.title_font, 100, (255, 0, 0),
+        self.winRect = self.winimg.get_rect()
+        self.screen.blit(self.winimg, self.winRect)
+        self.draw_text('Your new Golem friend is fixed! You can finally leave the junkyard... together.', self.title_font, 50, (255, 0, 0),
                         WIDTH / 2, HEIGHT / 2, align='center')
-        self.draw_text('Press a key to quit', self.title_font, 75, (255, 255, 255),
+        self.draw_text('Press a key to quit', self.title_font, 50, (255, 255, 255),
                         WIDTH / 2, HEIGHT * 3 / 4, align='center')
         pygame.display.flip()
         self.wait_for_key()
@@ -245,8 +256,10 @@ class Game:
     def show_start_screen(self):
         pygame.mixer.music.load(os.path.join(self.music_folder, MENU_MUSIC))
         pg.mixer.music.play(loops=-1)
-        self.draw_text(TITLE, self.title_font, 100, (255, 0, 0),
+        self.draw_text('{},'.format(TITLE.split(',')[0]), self.title_font, 50, (255, 0, 0),
                         WIDTH / 2, HEIGHT / 2, align='center')
+        self.draw_text(TITLE.split(',')[1], self.title_font, 50, (255, 0, 0),
+                        WIDTH / 2 + 50, HEIGHT / 2 + 50, align='center')
         self.draw_text('Press a key to start', self.title_font, 75, (255, 255, 255),
                         WIDTH / 2, HEIGHT * 3 / 4, align='center')
         pygame.display.flip()
