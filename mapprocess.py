@@ -40,7 +40,8 @@ class Map:
             'q': {'walkable': False, 'tileimg': map_t('carpile.png', 1, 1)},  # Carpile
             'S': {'walkable': True, 'tileimg': map_t('grasses.png', 1, 0)},  # Spawn
             'z': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)},  # End place holder
-            'm': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)}  # Mob, small (dog)
+            'm': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)},  # Mob, small (dog)
+            'M': {'walkable': True, 'tileimg': map_t('door.png', 0, 0)}  # Mob, Large (guard)
         }
         if filename:
             self.loadmap(filename)

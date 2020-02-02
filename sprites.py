@@ -199,6 +199,7 @@ class Mob(pg.sprite.Sprite):
         self.imageindex = 0
         self.facing = 'south'
         self.game = game
+        self.pingpong = 1
         self.imagemap = game.mob_img[m_type].copy()
         self.image = self.imagemap.subsurface(ENEMIES[m_type]['hit_rect'])
         self.rect = self.image.get_rect()
@@ -257,16 +258,30 @@ class Mob(pg.sprite.Sprite):
         self.stallkludge += 1
         if self.stallkludge > 15:
             self.stallkludge = 0
-            self.imageindex = (self.imageindex + 1) % 4
-
-            if self.facing == 'south':
-                self.image = self.imagemap.subsurface(self.imageindex*32, 3*32, 32, 32)
-            elif self.facing == 'north':
-                self.image = self.imagemap.subsurface(self.imageindex*32, 1*32, 32, 32)
-            elif self.facing == 'east':
-                self.image = self.imagemap.subsurface(self.imageindex*32, 2*32, 32, 32)
-            elif self.facing == 'west':
-                self.image = self.imagemap.subsurface(self.imageindex*32, 0*32, 32, 32)
+            if self.mob_type == 'dog':
+                self.imageindex = (self.imageindex + 1) % 4
+                if self.facing == 'south':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 3*32, 32, 32)
+                elif self.facing == 'north':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 1*32, 32, 32)
+                elif self.facing == 'east':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 2*32, 32, 32)
+                elif self.facing == 'west':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 0*32, 32, 32)
+            elif self.mob_type == 'guard':
+                if self.imageindex <= 0:
+                    self.pingpong = 1
+                elif self.imageindex >= 2:
+                    self.pingpong = -1
+                self.imageindex += self.pingpong
+                if self.facing == 'south':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 0*64, 32, 64)
+                elif self.facing == 'east':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 1*64, 32, 64)
+                elif self.facing == 'north':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 2*64, 32, 64)
+                elif self.facing == 'west':
+                    self.image = self.imagemap.subsurface(self.imageindex*32, 3*64, 32, 64)
 
         if target_dist.length_squared() < ENEMIES[mob_type]['radius']**2:
             # Chase mode

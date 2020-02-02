@@ -67,7 +67,7 @@ ENEMIES = {
         'guard': {
             'speed': 1,
             'weapon': 'gun',
-            'image': 'temp-guard.png',
+            'image': 'guard.png',
             'hit_rect': pg.Rect(0, 0, 32, 64),
             'health': 200,
             'radius': 10
