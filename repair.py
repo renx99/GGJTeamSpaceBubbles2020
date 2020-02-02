@@ -9,6 +9,9 @@ import os
 import pygame
 import sys
 
+tempOne = 0
+tempTwo = 0
+
 class Game:
     def __init__(self):
         pygame.mixer.pre_init(44100, -16, 4,2048)
@@ -19,6 +22,7 @@ class Game:
         self.load_data()
         self.title_font = None
         self.pressed = None
+
 
     def draw_text(self,text, font_name, size, color, x, y, align="topleft"):
         font = pygame.font.Font(font_name, size)
@@ -69,7 +73,7 @@ class Game:
         # Initialize all variables and do all the setup for a new game.
         self.all_sprites = pg.sprite.LayeredUpdates()
 
-        game_map = mapprocess.Map(os.path.join(self.map_folder, "test2.map"), self.tiles_folder)
+        game_map = mapprocess.Map(os.path.join(self.map_folder, "test3.map"), self.tiles_folder)
         self.tilemap = game_map.gettilemap()
 
         self.walls = pg.sprite.Group()
@@ -122,12 +126,21 @@ class Game:
             self.px -= PLAYER['speed']
         if self.pressed == 'right':
             self.px += PLAYER['speed']
-        if self.pressed == 'up':
+        if self.pressed == 'up' and self.py > 20:
             self.py -= PLAYER['speed']
-        if self.pressed == 'down':
+        if self.pressed == 'down' and self.py < 2085:
             self.py += PLAYER['speed']
 
         self.player.pos = vec(self.px, self.py)
+
+        # Display player position to command-line
+
+        # print(vec(self.px, self.py))
+        # print(self.px)
+
+        print(int(abs(WIDTH/2)))
+        print(int(abs(HEIGHT/2)))
+
 
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))

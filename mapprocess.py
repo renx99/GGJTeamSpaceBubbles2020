@@ -15,6 +15,14 @@ class Map:
                 "walkable": True,
                 "tileimg": self.getmaptile(os.path.join(maptilesfolder, "0.png"), 1, 0)
             },
+            'J': {
+                "walkable": True,
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "J.png"), 1, 0)
+            },
+            'j': {
+                "walkable": True,
+                "tileimg": self.getmaptile(os.path.join(maptilesfolder, "j.png"), 1, 0)
+            },
             'A': {
                 "walkable": False,
                 "tileimg": self.getmaptile(os.path.join(maptilesfolder, "ua.png"), 1, 0)
