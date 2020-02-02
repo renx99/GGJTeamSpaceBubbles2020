@@ -246,8 +246,24 @@ class Mob(pg.sprite.Sprite):
         self.facing = 'south'
 
     def update(self):
-        #print('dog update')
 
+        self.pos = vec(self.pos.x, self.pos.y)
+        target_dist = self.target.pos - self.pos
+        if target_dist.length_squared() < (ENEMIES[self.mob_type]['radius'] * TILESIZE)**2:
+            # Chase mode
+            if abs(target_dist.x) > abs(target_dist.y):
+                if target_dist.x > 0:
+                    self.facing = 'east'
+                else:
+                    self.facing = 'west'
+            else:
+                if target_dist.y > 0:
+                    self.facing = 'south'
+                else:
+                    self.facing = 'north'
+        else:
+            # wander Mode
+            pass
         if self.facing == 'north':
             self.pos.y -= ENEMIES[self.mob_type]['speed']
         elif self.facing == 'south':
@@ -259,12 +275,8 @@ class Mob(pg.sprite.Sprite):
         #self.pos.x += ENEMIES['dog']['speed']
         #self.pos.y += ENEMIES['dog']['speed']
 
-        self.pos = vec(self.pos.x, self.pos.y)
 
-        target_dist = self.target.pos - self.pos
-        mob_type = 'dog'
-
-        if random() < 0.002:
+        if self.mob_type == 'dog' and random() < 0.002:
             print('bark')
             #choice(self.game.zombie_moan_sounds).play()
 
@@ -296,13 +308,6 @@ class Mob(pg.sprite.Sprite):
                 elif self.facing == 'west':
                     self.image = self.imagemap.subsurface(self.imageindex*32, 3*64, 32, 64)
 
-        if target_dist.length_squared() < ENEMIES[mob_type]['radius']**2:
-            # Chase mode
-            # TODO: make chase
-            pass
-        else:
-            # Patrol Mode
-            pass
 
             #self.image = pg.transform.rotate(self.game.mob_img, self.rot)
         self.pos += self.vel * self.game.dt
