@@ -29,14 +29,11 @@ class Game:
     def load_data(self):
         game_folder = os.path.dirname(__file__)
         graphics_folder = os.path.join(game_folder, 'graphics')
-        tiles_folder = os.path.join(graphics_folder, 'tiles')
+        self.tiles_folder = os.path.join(graphics_folder, 'tiles')
         sound_folder = os.path.join(game_folder, 'sound')
         music_folder = os.path.join(game_folder, 'music')
         self.map_folder = os.path.join(game_folder, 'maps')
         self.player_img = pygame.image.load(os.path.join(graphics_folder, PLAYER['image']))
-
-        game_map = mapprocess.Map(os.path.join(self.map_folder, "test2.map"), tiles_folder)
-        self.tilemap = game_map.gettilemap()
 
         # Sound loading
 
@@ -72,10 +69,22 @@ class Game:
         # Initialize all variables and do all the setup for a new game.
         self.all_sprites = pg.sprite.LayeredUpdates()
 
+        game_map = mapprocess.Map(os.path.join(self.map_folder, "test2.map"), self.tiles_folder)
+        self.tilemap = game_map.gettilemap()
+
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
 
         self.camera = mapprocess.Camera(self.tilemap.get_width(), self.tilemap.get_height())
+
+        for wall in game_map.getwallmap():
+            Obstacle(
+                self,
+                wall[0],
+                wall[1],
+                wall[2],
+                wall[3]
+            )
 
         self.draw_debug = False
         self.paused = False
@@ -123,6 +132,9 @@ class Game:
     def draw(self):
         pygame.display.set_caption('{:.2f}'.format(self.clock.get_fps()))
         self.screen.blit(self.tilemap, self.camera.apply_rect(self.tilemap.get_rect()))
+        for wall in self.walls:
+            pygame.draw.rect(self.screen, (0, 255, 255), self.camera.apply_rect(wall.rect), 1)
+
         """
         pygame.draw.circle(
             self.screen,
