@@ -48,6 +48,7 @@ class Player(pg.sprite.Sprite):
         self.vel = vec(0, 0)
         self.pos = vec(x, y)
         self.facing = 'south'
+        self.moving = False
         self.last_shot = 0
         self.health = PLAYER['health']
         self.weapon = 'wrench'
@@ -130,15 +131,20 @@ class Player(pg.sprite.Sprite):
         self.damage_alpha = chain(DAMAGE_ALPHA * 4)
 
     def get_keys(self):
+        self.moving = False
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             self.facing = 'west'
+            self.moving = True
         if keys[pg.K_RIGHT] or keys[pg.K_d]:
             self.facing = 'east'
+            self.moving = True
         if keys[pg.K_UP] or keys[pg.K_w]:
             self.facing = 'north'
+            self.moving = True
         if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.facing = 'south'
+            self.moving = True
         if keys[pg.K_SPACE]:
             self.action()
 
@@ -162,14 +168,17 @@ class Player(pg.sprite.Sprite):
         #self.pos = vec(self.pos.x, self.pos.y)
 
         # slows down the animation rate
-        self.stallkludge += 1
+        self.stallkludge += self.game.clock.tick(FPS) / 2 
         if self.stallkludge > 15:
             self.stallkludge = 0
             if self.imageindex <= 0:
                 self.pingpong = 1
             elif self.imageindex >= 2:
                 self.pingpong = -1
-            self.imageindex += self.pingpong
+            if self.moving:
+                self.imageindex += self.pingpong
+            else:
+                self.imageindex = 1
             if self.facing == 'south':
                 self.image = self.imagemap.subsurface(self.imageindex*32, 0*64, 32, 64)
             elif self.facing == 'east':
@@ -280,7 +289,7 @@ class Mob(pg.sprite.Sprite):
             print('bark')
             #choice(self.game.zombie_moan_sounds).play()
 
-        self.stallkludge += 1
+        self.stallkludge += self.game.clock.tick(FPS) / 3
         if self.stallkludge > 15:
             self.stallkludge = 0
             if self.mob_type == 'dog':
