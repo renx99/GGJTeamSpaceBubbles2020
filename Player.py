@@ -28,6 +28,10 @@ if __name__ == "__main__":
         "up": "dude-up.png",
         "down": "dude-down.png",
     })
+
+    player.sprite[player.active_anim].x = window.width // 2 - 16
+    player.sprite[player.active_anim].y = window.height // 2 - 32
+
     testing = pyglet.text.Label("Testing....")
 
 
