@@ -1,21 +1,19 @@
 #!/usr/bin/env python3
-import pygame as pg
-import mapprocess
-from  random import randint, choice, randrange
+import os
+import sys
+from random import randrange
 
-from settings import *
+import pygame
+
 from sprites import *
 
-import os
-import pygame
-import sys
 
 class Game:
     def __init__(self):
-        pygame.mixer.pre_init(44100, -16, 4,2048)
+        pygame.mixer.pre_init(44100, -16, 4, 2048)
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT),
-                pygame.DOUBLEBUF|pygame.HWSURFACE)
+                                              pygame.DOUBLEBUF | pygame.HWSURFACE)
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.load_data()
@@ -24,12 +22,12 @@ class Game:
         self.enumerated_mobs = {}
         self.golem_parts = 0
         self.golem_goal = 1
-        self.level_progression = ['5.map','1.map', '2.map', '3.map', '4.map']
-        self.current_level = 0;
-        self.exiting = True 
-        self.exitdoors = pygame.Rect(0,0,TILESIZE,TILESIZE)
+        self.level_progression = ['5.map', '1.map', '2.map', '3.map', '4.map']
+        self.current_level = 0
+        self.exiting = True
+        self.exitdoors = pygame.Rect(0, 0, TILESIZE, TILESIZE)
 
-    def draw_text(self,text, font_name, size, color, x, y, align="topleft"):
+    def draw_text(self, text, font_name, size, color, x, y, align="topleft"):
         font = pygame.font.SysFont(font_name, size)
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect(**{align: (int(x), int(y))})
@@ -77,7 +75,6 @@ class Game:
         for snd in PLAYER_HIT_SOUNDS:
             self.player_hit_sounds.append(pygame.mixer.Sound(os.path.join(sound_folder, snd)))
 
-
     def new(self):
         # Initialize all variables and do all the setup for a new game.
         self.all_sprites = pg.sprite.LayeredUpdates()
@@ -124,7 +121,7 @@ class Game:
         d_spawns = [(x, y) for y, x in enumerate(d_rows) if x != 0]
         for i, (x, y) in enumerate(d_spawns):
             self.enumerated_mobs[i] = Mob(self, x * TILESIZE, y * TILESIZE, 'dog')
-            seconds = randrange(500,3000)
+            seconds = randrange(500, 3000)
             e = pygame.event.Event(pygame.USEREVENT + i)
             pygame.time.set_timer(e.type, seconds)
 
@@ -135,7 +132,7 @@ class Game:
         g_spawns = [(x, y) for y, x in enumerate(g_rows) if x != 0]
         for i, (x, y) in enumerate(g_spawns):
             self.enumerated_mobs[i + j] = Mob(self, x * TILESIZE, y * TILESIZE, 'guard')
-            seconds = randrange(300,2000)
+            seconds = randrange(300, 2000)
             e = pygame.event.Event(pygame.USEREVENT + i + j)
             pygame.time.set_timer(e.type, seconds)
 
@@ -144,9 +141,9 @@ class Game:
         e_spawns = [(x, y) for y, x in enumerate(e_rows) if x != 0]
         print(e_spawns)
         # TODO: Find bounding recanting Pixel/rect and then check collison on update
-        top_x = e_spawns[0][0] * TILESIZE 
-        top_y = e_spawns[0][1] * TILESIZE 
-        self.exitdoors = pygame.Rect(top_x,top_y, TILESIZE, len(e_spawns)*TILESIZE)
+        top_x = e_spawns[0][0] * TILESIZE
+        top_y = e_spawns[0][1] * TILESIZE
+        self.exitdoors = pygame.Rect(top_x, top_y, TILESIZE, len(e_spawns) * TILESIZE)
 
         y_rows = [l.index('y') if 'y' in l else 0 for l in grid]
         y_spawns = [(x, y) for y, x in enumerate(y_rows) if x != 0]
@@ -154,7 +151,6 @@ class Game:
         print(y_spawns)
         for x, y in y_spawns:
             junk = Junk(self, x * TILESIZE, y * TILESIZE)
-
 
     def run(self):
         # Game loop - set self.playing = false to end the game.
@@ -186,7 +182,7 @@ class Game:
         sys.exit()
 
     def update(self):
-        #Update portion of the game loop.
+        # Update portion of the game loop.
         self.all_sprites.update()
         self.camera.update(self.player)
 
@@ -206,16 +202,16 @@ class Game:
 
         if PLAYER['health'] >= 90:  # if above 90 health text is green
             self.draw_text('Health: {}'.format(PLAYER['health']), self.hud_font, 20, (0, 255, 0),
-                        75, 15, align='center')
+                           75, 15, align='center')
         elif PLAYER['health'] <= 66 and PLAYER['health'] >= 51:  # if above 51 and bellow 66 health text is yellow
             self.draw_text('Health: {}'.format(PLAYER['health']), self.hud_font, 20, (255, 255, 0),
                            75, 15, align='center')
         elif PLAYER['health'] <= 50:  # if bellow 50 health text is red
             self.draw_text('Health: {}'.format(PLAYER['health']), self.hud_font, 20, (255, 0, 0),
                            75, 15, align='center')
-        #golem_parts
+        # golem_parts
         self.draw_text('Golem parts: {}/{}'.format(self.golem_parts, self.golem_goal), self.hud_font, 20, (255, 0, 0),
-                           220, 15, align='center')
+                       220, 15, align='center')
 
         pygame.display.flip()
 
@@ -224,44 +220,45 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-            elif event.type == pygame.KEYDOWN:     # check for key presses
-                if event.key == pygame.K_LEFT:     # left arrow turns left
+            elif event.type == pygame.KEYDOWN:  # check for key presses
+                if event.key == pygame.K_LEFT:  # left arrow turns left
                     self.player.pressed = 'left'
                 elif event.key == pygame.K_RIGHT:  # right arrow turns right
                     self.player.pressed = 'right'
-                elif event.key == pygame.K_UP:     # up arrow goes up
+                elif event.key == pygame.K_UP:  # up arrow goes up
                     self.player.pressed = 'up'
-                elif event.key == pygame.K_DOWN:   # down arrow goes down
+                elif event.key == pygame.K_DOWN:  # down arrow goes down
                     self.player.pressed = 'down'
-                elif event.key == pygame.K_p:      # down arrow goes down
-                    self.paused
+                elif event.key == pygame.K_p:  # down arrow goes down
+                    # self.paused
+                    pass
                 elif event.key == pygame.K_ESCAPE:  # down arrow goes down
                     self.quit()
-            elif event.type == pygame.KEYUP:        # check for key releases
+            elif event.type == pygame.KEYUP:  # check for key releases
                 self.player.pressed = None
             elif event.type >= pygame.USEREVENT:
                 pygame.time.set_timer(event.type, 0)
                 mob = self.enumerated_mobs[event.type - pygame.USEREVENT]
                 mob.facing = choice(list(DIRECTIONS.keys()))
-                seconds = randrange(500,3000)
+                seconds = randrange(500, 3000)
                 pygame.time.set_timer(event.type, seconds)
-
 
     def show_next_screen(self):
         self.draw_text('You repaired the Golem but he needs more work!', self.title_font, 50, (255, 0, 0),
-                        WIDTH / 2, HEIGHT / 2, align='center')
+                       WIDTH / 2, HEIGHT / 2, align='center')
         self.draw_text('Press a key to advance', self.title_font, 50, (255, 255, 255),
-                        WIDTH / 2, HEIGHT * 3 / 4, align='center')
+                       WIDTH / 2, HEIGHT * 3 / 4, align='center')
         pygame.display.flip()
         self.wait_for_key()
 
     def show_victory_screen(self):
         self.winRect = self.winimg.get_rect()
         self.screen.blit(self.winimg, self.winRect)
-        self.draw_text('Your new Golem friend is fixed! You can finally leave the junkyard... together.', self.title_font, 50, (255, 0, 0),
-                        WIDTH / 2, HEIGHT / 2, align='center')
+        self.draw_text('Your new Golem friend is fixed! You can finally leave the junkyard... together.',
+                       self.title_font, 50, (255, 0, 0),
+                       WIDTH / 2, HEIGHT / 2, align='center')
         self.draw_text('Press a key to quit', self.title_font, 50, (255, 255, 255),
-                        WIDTH / 2, HEIGHT * 3 / 4, align='center')
+                       WIDTH / 2, HEIGHT * 3 / 4, align='center')
         pygame.display.flip()
         self.wait_for_key()
         self.quit()
@@ -270,19 +267,19 @@ class Game:
         pygame.mixer.music.load(os.path.join(self.music_folder, MENU_MUSIC))
         pg.mixer.music.play(loops=-1)
         self.draw_text('{},'.format(TITLE.split(',')[0]), self.title_font, 50, (255, 0, 0),
-                        WIDTH / 2, HEIGHT / 2, align='center')
+                       WIDTH / 2, HEIGHT / 2, align='center')
         self.draw_text(TITLE.split(',')[1], self.title_font, 50, (255, 0, 0),
-                        WIDTH / 2 + 50, HEIGHT / 2 + 50, align='center')
+                       WIDTH / 2 + 50, HEIGHT / 2 + 50, align='center')
         self.draw_text('Press a key to start', self.title_font, 75, (255, 255, 255),
-                        WIDTH / 2, HEIGHT * 3 / 4, align='center')
+                       WIDTH / 2, HEIGHT * 3 / 4, align='center')
         pygame.display.flip()
         self.wait_for_key()
 
     def show_go_screen(self):
         self.draw_text('GAME OVER', self.title_font, 100, (255, 0, 0),
-                        WIDTH / 2, HEIGHT / 2, align='center')
+                       WIDTH / 2, HEIGHT / 2, align='center')
         self.draw_text('Press a key to start', self.title_font, 75, (255, 255, 255),
-                        WIDTH / 2, HEIGHT * 3 / 4, align='center')
+                       WIDTH / 2, HEIGHT * 3 / 4, align='center')
         pygame.display.flip()
         self.wait_for_key()
 
@@ -297,6 +294,7 @@ class Game:
                     self.quit()
                 if event.type == pygame.KEYUP:
                     waiting = False
+
 
 g = Game()
 g.show_start_screen()

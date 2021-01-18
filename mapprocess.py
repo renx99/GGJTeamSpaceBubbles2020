@@ -1,5 +1,7 @@
 import os
+
 import pygame
+
 import settings
 
 
@@ -9,7 +11,7 @@ def collide_hit_rect(one, two):
 
 class Map:
     def __init__(self, filename=None, maptilesfolder=None):
-        map_t = lambda t, x, y : self.getmaptile(os.path.join(maptilesfolder, t), x, y)
+        map_t = lambda t, x, y: self.getmaptile(os.path.join(maptilesfolder, t), x, y)
         self.TILE_WIDTH = settings.TILESIZE
         self.TILE_HEIGHT = settings.TILESIZE
         self.tileimgs = {
@@ -29,7 +31,7 @@ class Map:
             'D': {'walkable': True, 'tileimg': map_t('dirtandgrasses.png', 0, 0)},  # Dirt Used
             'd': {'walkable': True, 'tileimg': map_t('dirtandgrasses.png', 1, 1)},  # Dirt? Used
             'E': {'walkable': True, 'tileimg': map_t('grass1edges.png', 0, 0)},  # grass1edges
-            'e': {'walkable': True, 'tileimg': map_t('grass1edges.png', 1, 0)}, #  grass1edges  Used
+            'e': {'walkable': True, 'tileimg': map_t('grass1edges.png', 1, 0)},  # grass1edges  Used
             'F': {'walkable': True, 'tileimg': map_t('grass1edges.png', 1, 1)},  # Used
             'f': {'walkable': True, 'tileimg': map_t('grass1edges.png', 0, 1)},
             'G': {'walkable': True, 'tileimg': map_t('grasses.png', 1, 0)},  # Used
@@ -60,8 +62,8 @@ class Map:
     def getmaptile(self, filename, row, col):
         return pygame.image.load(filename).subsurface(
             (
-                self.TILE_WIDTH*col,
-                self.TILE_HEIGHT*row,
+                self.TILE_WIDTH * col,
+                self.TILE_HEIGHT * row,
                 self.TILE_WIDTH,
                 self.TILE_HEIGHT
             )
@@ -94,8 +96,8 @@ class Map:
 
         returnSurface = pygame.Surface(
             (
-                maxColIndex*self.TILE_WIDTH,
-                maxRowIndex*self.TILE_HEIGHT
+                maxColIndex * self.TILE_WIDTH,
+                maxRowIndex * self.TILE_HEIGHT
             )
         )
 
@@ -103,7 +105,7 @@ class Map:
             for colIndex in range(0, len(self.maplist[rowIndex]), 1):
                 returnSurface.blit(
                     self.tileimgs[self.maplist[rowIndex][colIndex]]["tileimg"],
-                    (self.TILE_WIDTH*colIndex, self.TILE_HEIGHT*rowIndex)
+                    (self.TILE_WIDTH * colIndex, self.TILE_HEIGHT * rowIndex)
                 )
 
         return returnSurface
@@ -114,11 +116,11 @@ class Map:
             for colIndex in range(0, len(self.maplist[rowIndex]), 1):
                 if not self.tileimgs[self.maplist[rowIndex][colIndex]]["walkable"]:
                     returnList.append(
-                       (
-                           self.TILE_WIDTH*colIndex,
-                           self.TILE_HEIGHT*rowIndex,
-                           self.TILE_WIDTH,
-                           self.TILE_HEIGHT
+                        (
+                            self.TILE_WIDTH * colIndex,
+                            self.TILE_HEIGHT * rowIndex,
+                            self.TILE_WIDTH,
+                            self.TILE_HEIGHT
                         )
                     )
         return returnList
@@ -126,7 +128,6 @@ class Map:
 
 class Camera:
     def __init__(self, width, height):
-
         self.camera = pygame.Rect(0, 0, width, height)
         self.width = width
         self.height = height
