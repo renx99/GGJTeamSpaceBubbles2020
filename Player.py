@@ -3,7 +3,6 @@ import pyglet
 
 class Player:
     def __init__(self, sprites):
-
         self.sprite = {}
 
         self.active_anim = "left"
@@ -25,10 +24,9 @@ if __name__ == "__main__":
 
     player = Player({
         "right": "dude-right.png",
-        "left" : "dude-left.png",
+        "left": "dude-left.png",
         "up": "dude-up.png",
         "down": "dude-down.png",
-        "attack-right": "dude-right-attack.png"
     })
     testing = pyglet.text.Label("Testing....")
 

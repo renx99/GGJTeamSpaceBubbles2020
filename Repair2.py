@@ -1,3 +1,5 @@
+from abc import ABC
+
 import pyglet
 
 from Player import Player
@@ -13,9 +15,9 @@ class Repair(pyglet.window.Window):
         # self.player = Player("dude-right.png")
         self.player = Player({
             "right": "dude-right.png",
+            "left": "dude-left.png",
             "up": "dude-up.png",
             "down": "dude-down.png",
-            "attack-right": "dude-right-attack.png"
         })
 
     def on_draw(self):
