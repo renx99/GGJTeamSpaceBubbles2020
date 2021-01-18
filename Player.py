@@ -6,7 +6,7 @@ class Player:
 
         self.sprite = {}
 
-        self.active_anim = "right"
+        self.active_anim = "left"
 
         for action, sprite in sprites.items():
             sheet = pyglet.resource.image(sprite)
@@ -14,13 +14,7 @@ class Player:
             anim = pyglet.image.Animation.from_image_sequence(grid, duration=0.25)
             self.sprite[action] = pyglet.sprite.Sprite(anim)
 
-            if action == "right":
-                anim_left = anim.get_transform(flip_x=True)
-                self.sprite["left"] = pyglet.sprite.Sprite(anim_left)
-
     def draw(self):
-        # print(type(self.sprite["right"]))
-        # return self.sprite["right"]
         return self.sprite[self.active_anim].draw()
 
 
@@ -31,6 +25,7 @@ if __name__ == "__main__":
 
     player = Player({
         "right": "dude-right.png",
+        "left" : "dude-left.png",
         "up": "dude-up.png",
         "down": "dude-down.png",
         "attack-right": "dude-right-attack.png"
