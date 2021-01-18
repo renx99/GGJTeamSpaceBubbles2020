@@ -10,13 +10,13 @@ class Repair(pyglet.window.Window):
 
         self.label = pyglet.text.Label('Testing...')
 
-        self.player = Player("dude-right.png")
-        # self.player = Player({
-        #     "right": "dude-right.png",
-        #     "up": "dude-up.png",
-        #     "down": "dude-down.png",
-        #     "attack-right": "dude-right-attack.png"
-        # })
+        # self.player = Player("dude-right.png")
+        self.player = Player({
+            "right": "dude-right.png",
+            "up": "dude-up.png",
+            "down": "dude-down.png",
+            "attack-right": "dude-right-attack.png"
+        })
 
     def on_draw(self):
         self.clear()
