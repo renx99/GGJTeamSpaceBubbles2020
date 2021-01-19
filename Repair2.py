@@ -25,9 +25,6 @@ class Repair(pyglet.window.Window):
         self.player.draw()
         self.label.draw()
 
-    @classmethod
-    def load_resources(cls):
-        pass
 
 
 if __name__ == "__main__":
