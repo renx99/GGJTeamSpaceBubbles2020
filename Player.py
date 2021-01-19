@@ -3,6 +3,8 @@ import pyglet
 
 class Player:
     def __init__(self, sprite_sheet):
+        self._x, self._y = 0, 0
+
         self.sprites = {}
 
         self.active_anim = "down"
@@ -23,6 +25,26 @@ class Player:
     @action.setter
     def action(self, act):
         self.active_anim = act
+        self.sprites[self.active_anim].x = self.x
+        self.sprites[self.active_anim].y = self.y
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, _x):
+        self._x = _x
+        self.sprites[self.active_anim].x = self.x
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, _y):
+        self._y = _y
+        self.sprites[self.active_anim].y = self.y
 
 
 if __name__ == "__main__":
@@ -43,11 +65,9 @@ if __name__ == "__main__":
         "down": "dude-down.png",
     })
 
-    player.sprites[player.active_anim].x = window.width // 2 - 16
-    player.sprites[player.active_anim].y = window.height // 2 - 32
-
     testing = pyglet.text.Label("Testing....")
-
+    player.x = window.width // 2
+    player.y = window.height // 2
 
     @window.event
     def on_draw():
@@ -55,29 +75,32 @@ if __name__ == "__main__":
         player.draw()
         testing.draw()
 
+
     counter = 0
+
 
     def update(dt):
         global counter
 
         if 0 <= counter < 180:
-            player.sprites[player.active_anim].x += 30 * dt
+            player.x += 30 * dt
             player.action = "right"
         elif 180 <= counter < 360:
-            player.sprites[player.active_anim].y += 30 * dt
+            player.y += 30 * dt
             player.action = "up"
         elif 360 <= counter < 520:
-            player.sprites[player.active_anim].x -= 30 * dt
+            player.x -= 30 * dt
             player.action = "left"
         elif 520 <= counter < 720:
-            player.sprites[player.active_anim].y -= 30 * dt
+            player.y -= 30 * dt
             player.action = "down"
         else:
             counter = 0
 
         counter += 1
         # print("counter: {} - delta time: {}".format(counter, dt))
-        print(player.sprites[player.active_anim].x, player.sprites[player.active_anim].y)
+        # print(player.sprites[player.active_anim].x, player.sprites[player.active_anim].y)
 
-    pyglet.clock.schedule_interval(update, 1 / 60.0)
+
+    pyglet.clock.schedule_interval(update, 1 / 120.0)
     pyglet.app.run()
