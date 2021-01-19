@@ -3,7 +3,7 @@ import pyglet
 
 class Player:
     def __init__(self, sprite_sheet):
-        self._x, self._y = 0, 0
+        self.x, self.y = 0, 0
 
         self.sprites = {}
 
@@ -16,6 +16,8 @@ class Player:
             self.sprites[action] = pyglet.sprite.Sprite(anim)
 
     def draw(self):
+        self.sprites[self.active_anim].x = self.x
+        self.sprites[self.active_anim].y = self.y
         return self.sprites[self.active_anim].draw()
 
     @property
@@ -28,23 +30,6 @@ class Player:
         self.sprites[self.active_anim].x = self.x
         self.sprites[self.active_anim].y = self.y
 
-    @property
-    def x(self):
-        return self._x
-
-    @x.setter
-    def x(self, _x):
-        self._x = _x
-        self.sprites[self.active_anim].x = self.x
-
-    @property
-    def y(self):
-        return self._y
-
-    @y.setter
-    def y(self, _y):
-        self._y = _y
-        self.sprites[self.active_anim].y = self.y
 
 
 if __name__ == "__main__":
