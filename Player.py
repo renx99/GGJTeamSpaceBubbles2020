@@ -64,6 +64,7 @@ class Player:
     #     for act, sprite in self.sprites.items():
     #         sprite.
 
+
 if __name__ == "__main__":
     from pyglet.window import key
 
@@ -71,6 +72,15 @@ if __name__ == "__main__":
     pyglet.resource.reindex()
 
     window = pyglet.window.Window()
+
+    # use these settings to for retro pixel look, otherwise it's blurry
+    from pyglet.gl import *
+    glEnable(GL_TEXTURE_2D)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+
+    # use to set background color
+    from pyglet.gl import glClearColor
+    glClearColor(100, 100, 100, 1.0)  # red, green, blue, and alpha(transparency)
 
     keys = key.KeyStateHandler()
     window.push_handlers(keys)
@@ -85,7 +95,7 @@ if __name__ == "__main__":
     player.offset_x = player.sprites["right"].width // 2
     player.offset_y = player.sprites["right"].height // 2
 
-    player.set_scale(2)
+    player.set_scale(3)
 
     @window.event
     def on_draw():
