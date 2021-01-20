@@ -1,0 +1,26 @@
+{
+  "name": "Dude",
+  "actions": {
+
+    "right": {
+      "file": "dude-right.png",
+      "timing": 0.10
+    },
+
+    "left": {
+      "file": "dude-left.png",
+      "timing": 0.10
+    },
+
+    "up": {
+      "file": "dude-up.png",
+      "timing": 0.10
+    },
+
+    "down": {
+      "file": "dude-down.png",
+      "timing": 0.10
+    }
+
+  }
+}
