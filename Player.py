@@ -47,8 +47,8 @@ class Player:
     @action.setter
     def action(self, act):
         self.active_anim = act
-        self.sprites[self.active_anim].x = self.x
-        self.sprites[self.active_anim].y = self.y
+        self.sprites[self.active_anim].x = self.x - self.offset_x
+        self.sprites[self.active_anim].y = self.y - self.offset_x
 
     # Return a list of currently available actions used to set which animation to show
     def get_actions(self):
@@ -59,14 +59,8 @@ class Player:
         for act, sprite in self.sprites.items():
             sprite.scale = size
 
-    # # Set anchor for all sprites
-    # def set_anchor(self, x, y):
-    #     for act, sprite in self.sprites.items():
-    #         sprite.
-
 
 if __name__ == "__main__":
-    from pyglet.window import key
 
     pyglet.resource.path = ['./graphics']
     pyglet.resource.reindex()
@@ -82,9 +76,6 @@ if __name__ == "__main__":
     from pyglet.gl import glClearColor
     glClearColor(100, 100, 100, 1.0)  # red, green, blue, and alpha(transparency)
 
-    keys = key.KeyStateHandler()
-    window.push_handlers(keys)
-
     player = Player("player.json")
 
     testing = pyglet.text.Label("Testing....")
@@ -95,7 +86,7 @@ if __name__ == "__main__":
     player.offset_x = player.sprites["right"].width // 2
     player.offset_y = player.sprites["right"].height // 2
 
-    player.set_scale(3)
+    player.set_scale(2)
 
     @window.event
     def on_draw():
@@ -103,39 +94,15 @@ if __name__ == "__main__":
         player.draw()
         testing.draw()
 
-
     counter = 0
 
     demo = itertools.cycle(player.get_actions())
 
-
     def change_action(dt):
         player.action = next(demo)
 
-
     def update(dt):
         testing.text = "Action: {}".format(player.active_anim)
-
-
-    # def update(dt):
-    #     global counter
-    #
-    #     if 0 <= counter < 180:
-    #         player.action = "right"
-    #     elif 180 <= counter < 360:
-    #         player.action = "up"
-    #     elif 360 <= counter < 520:
-    #         player.action = "left"
-    #     elif 520 <= counter < 720:
-    #         player.action = "down"
-    #     else:
-    #         counter = 0
-    #
-    #
-    #     counter += 1
-        # print("counter: {} - delta time: {}".format(counter, dt))
-        # print(player.sprites[player.active_anim].x, player.sprites[player.active_anim].y)
-
 
     pyglet.clock.schedule_interval(update, 1 / 120.0)
     pyglet.clock.schedule_interval(change_action, 3)
