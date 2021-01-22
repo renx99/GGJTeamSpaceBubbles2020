@@ -86,7 +86,7 @@ if __name__ == "__main__":
     player.offset_x = player.sprites["right"].width // 2
     player.offset_y = player.sprites["right"].height // 2
 
-    player.set_scale(2)
+    player.set_scale(4)
 
     @window.event
     def on_draw():
