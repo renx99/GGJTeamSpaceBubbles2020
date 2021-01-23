@@ -4,9 +4,6 @@ from pyglet.window import key
 from Player import Player
 
 
-# import InputController
-
-
 class Repair(pyglet.window.Window):
 
     def __init__(self, *args, **kwargs):
